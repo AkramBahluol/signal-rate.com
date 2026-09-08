@@ -210,6 +210,14 @@
 - The bundled source-reviewed dataset contains 248 UN M49 countries/areas, 241 E.164 calling-code relationships, 27 BNetzA German MCC/MNC assignments, and three explicitly matched German public operator entities. No assignment or carrier capability was invented.
 - Global MCC/MNC coverage intentionally remains regulator-by-regulator rather than copying an unlicensed secondary directory or redistributing ITU operational-bulletin data without confirmed reuse rights. Markets without a reviewed permitted source retain honest empty states.
 
+## Milestone 12 internet speed test (complete)
+
+- Added `/network/speed-test` using the official `@cloudflare/speedtest` browser engine. It starts only after an explicit user click and offers library-native Quick and Full measurement profiles for download, upload, idle latency, and jitter. Packet loss is intentionally not shown because no project-owned TURN service is configured.
+- Speed-test traffic goes directly from the visitor's browser to `speed.cloudflare.com`; no measurement is proxied through Laravel or the SignalRate origin. Cloudflare result logging and per-measurement logging are disabled in the engine configuration, and SignalRate neither stores nor transmits results. The page includes a concise privacy and data-consumption notice.
+- The dependency is loaded with an interaction-time dynamic import, so it is absent from unrelated page execution. The CSP adds only `https://speed.cloudflare.com` to `connect-src`; the existing AdSense/CMP policy, trusted-proxy controls, SSRF protections, HSTS, HTTPS, and Analytics-disabled state are unchanged.
+- Added the tool to the Network Tools registry, global search catalog, related-tool navigation, canonical metadata, breadcrumbs, SoftwareApplication structured data, and the registry-driven sitemap. The technical sitemap now contains 435 canonical URLs; Search Console's previously reported 434 discovered pages remains the recorded owner-side baseline until Google processes the updated sitemap.
+- Validation passed: three focused frontend logic tests, the network global-search test, ESLint, TypeScript/Next.js production build, and a real browser Quick Test. The browser run completed with real download, upload, latency, and jitter measurements while backend logs showed health checks only and no speed-test request.
+
 ## Remaining after Milestone 7
 - Add further national-regulator MCC/MNC snapshots after source access, licence, attribution, and operator-matching review; the current pipeline and audit report are ready for scheduled review-based imports.
 - Configure and approve real UK plan sources before publishing records; source terms, retrieval reliability, and mappings must be checked first.

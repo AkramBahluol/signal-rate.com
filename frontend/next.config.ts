@@ -4,7 +4,7 @@ const apiOrigin = (() => {
   try { return new URL(process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000").origin; }
   catch { return ""; }
 })();
-const connectSources = ["'self'", ...(process.env.NODE_ENV === "development" && apiOrigin ? [apiOrigin] : [])].join(" ");
+const connectSources = ["'self'", "https://speed.cloudflare.com", ...(process.env.NODE_ENV === "development" && apiOrigin ? [apiOrigin] : [])].join(" ");
 const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT?.trim() ?? "";
 const adsenseEnabled = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true" && /^ca-pub-\d{16}$/.test(adsenseClient);
 const adsenseScriptSources = adsenseEnabled ? ["https://pagead2.googlesyndication.com", "https://fundingchoicesmessages.google.com"] : [];

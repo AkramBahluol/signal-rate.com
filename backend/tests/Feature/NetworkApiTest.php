@@ -125,6 +125,7 @@ final class NetworkApiTest extends TestCase
         $this->getJson('/api/v1/search?q=email%20security')->assertOk()->assertJsonFragment(['title' => 'Email Security']);
         $this->getJson('/api/v1/search?q=tls%20certificate')->assertOk()->assertJsonFragment(['title' => 'SSL Certificate Checker']);
         $this->getJson('/api/v1/search?q=download%20time')->assertOk()->assertJsonFragment(['title' => 'Download Time Calculator']);
+        $this->getJson('/api/v1/search?q=internet%20speed')->assertOk()->assertJsonFragment(['title' => 'Internet Speed Test', 'url' => '/network/speed-test']);
         $this->getJson('/api/v1/search?q=regex')->assertOk()->assertJsonFragment(['title' => 'Regex Tester']);
     }
 

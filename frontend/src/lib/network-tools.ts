@@ -1,4 +1,4 @@
-export type NetworkMode="my-ip"|"ip-lookup"|"asn"|"rdap"|"reverse-dns"|"hostname"|"dns"|"port"|"blacklist"|"subnet"|"cidr"|"ip-calculator"|"spf"|"dkim"|"dmarc"|"ssl"|"redirect"|"headers"|"bandwidth"|"download-time";
+export type NetworkMode="my-ip"|"ip-lookup"|"asn"|"rdap"|"reverse-dns"|"hostname"|"dns"|"port"|"blacklist"|"subnet"|"cidr"|"ip-calculator"|"spf"|"dkim"|"dmarc"|"ssl"|"redirect"|"headers"|"bandwidth"|"download-time"|"speed-test";
 export type NetworkToolDefinition={mode:NetworkMode;name:string;path:string;group:string;description:string;heading:string;explanation:string;local?:boolean;related:NetworkMode[]};
 const tool=(mode:NetworkMode,name:string,path:string,group:string,description:string,heading:string,explanation:string,related:NetworkMode[],local=false):NetworkToolDefinition=>({mode,name,path,group,description,heading,explanation,related,local});
 export const networkTools:NetworkToolDefinition[]=[
@@ -22,5 +22,6 @@ tool("cidr","CIDR Calculator","/network/cidr-calculator","Network calculators","
 tool("ip-calculator","IP Calculator","/network/ip-calculator","Network calculators","Classify IPv4 and IPv6 addresses.","Public and special-purpose addresses","Addresses are classified as public, private, loopback, link-local, multicast, or other special-purpose ranges.",["subnet","cidr"],true),
 tool("bandwidth","Bandwidth Calculator","/network/bandwidth-calculator","Network calculators","Convert network rates across bit and byte units.","Bits, bytes and rate units","Network rates conventionally use decimal multiples; one byte always equals eight bits.",["download-time","ip-calculator"],true),
 tool("download-time","Download Time Calculator","/network/download-time-calculator","Network calculators","Estimate ideal transfer time from size and line rate.","An ideal transfer estimate","The result excludes protocol overhead, congestion, server limits, Wi-Fi conditions, and latency.",["bandwidth","ip-calculator"],true),
+tool("speed-test","Internet Speed Test","/network/speed-test","Connection testing","Measure download speed, upload speed, latency, and jitter against Cloudflare's edge.","What this speed test measures","The browser transfers test data directly with Cloudflare. Results describe this device and connection at test time, and can vary with Wi-Fi, congestion, VPNs, and background traffic.",["bandwidth","download-time"]),
 ];
 export const networkToolByMode=Object.fromEntries(networkTools.map(item=>[item.mode,item])) as Record<NetworkMode,NetworkToolDefinition>;
