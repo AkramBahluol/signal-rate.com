@@ -194,7 +194,7 @@
 
 ## Milestone 11 post-launch operations (in progress)
 
-- Added a five-minute production health check for public uptime, sitemap integrity, TLS expiry, Docker health/restarts, disk, available memory, and newly observed host-Nginx 5xx responses. Failures enter the systemd journal and an optional generic webhook without tool inputs, request payloads, secrets, or private forwarding data.
+- Added a five-minute production host check for origin uptime, sitemap integrity, Origin CA expiry, Docker health/restarts, disk, available memory, and newly observed host-Nginx 5xx responses. Public edge uptime, canonical redirects, representative routes, and public TLS expiry are checked separately by the ten-minute external heartbeat. Failures enter the systemd journal and an optional generic webhook without tool inputs, request payloads, secrets, or private forwarding data.
 - Added daily encrypted restic backup and weekly restore-verification units. The workflow validates the PostgreSQL dump/checksum/archive before upload and restores the latest encrypted snapshot to an isolated temporary path for checksum and archive inspection; it never restores into production.
 - Added host-Nginx log rotation and documented the existing 14-day Laravel plus bounded Docker retention. No AdSense or analytics behavior changed.
 - Added a reproducible Search Console readiness check and indexing baseline. Production robots, 434 unique canonical sitemap URLs, representative canonicals/indexability, and the external crawl pass. Search-engine discovery queries currently return no results and no Google verification TXT record exists; no indexing or performance data is fabricated.
