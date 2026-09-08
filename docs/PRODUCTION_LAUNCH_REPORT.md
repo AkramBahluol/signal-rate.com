@@ -4,50 +4,52 @@ Report date: 8 September 2026.
 
 ## Current result
 
-Milestone 10 repository preparation is in progress; production is **not live yet**. Public DNS checks for `signal-rate.com` and `www.signal-rate.com` returned NXDOMAIN on 8 September 2026. No production server address, SSH deployment identity/key path, Cloudflare zone access, origin certificate, or real public contact email was available in the working environment. Consequently, no claim of public HTTPS availability, migration execution on a production database, public crawl, or go-live completion is made.
+Milestone 10 origin deployment is complete and healthy on the assigned Ubuntu server, but the public launch is **not complete**. The application must not be described as live until DNS points at the new origin through Cloudflare and public HTTPS validation succeeds.
 
-The complete production image topology was validated locally in an isolated Compose project. All five services became healthy; the loopback origin returned 200 for the homepage, data policy, country directory, HTTP 404 knowledge page, robots, sitemap, and API. The local production crawl covered 440 routes (434 indexable, six intentional noindex) with zero broken internal links or unexpected redirects. PostgreSQL and Redis exposed only their container ports and no host bindings. This is origin validation, not a substitute for the pending public HTTPS crawl.
+The production source is deployed at commit `5fd19510b52b` on `prod.signal-rate.com` (`102.213.181.163`). All five production containers are healthy after a host reboot: container Nginx, standalone Next.js, PHP 8.4/Laravel, PostgreSQL 17, and Redis 8. The private application gateway is bound only to `127.0.0.1:8080`; frontend and backend ports are container-only, and PostgreSQL and Redis have no host bindings.
 
-Laravel passes 88 tests and 384 assertions; Pint passes across 139 files and Composer strict validation succeeds. The frontend passes 35 tests and ESLint, and the production Next.js image compiles/type-checks all 67 route entries with telemetry disabled. The production PHP 8.4 image uses the production ini, OPcache, a six-worker FPM ceiling, disabled display errors, and a non-root runtime user. Its Next.js peer also runs as a non-root user.
+Public DNS is currently incorrect. On 8 September 2026, both `signal-rate.com` and `www.signal-rate.com` resolved to `52.213.114.86`, while their authoritative nameservers were `suspension1.mydomainprovider.com` and `suspension2.mydomainprovider.com`. Public HTTP did not return a usable SignalRate response and port 443 was unreachable. These records do not point to the deployed server and are not Cloudflare nameservers. No public crawl, TLS success, or final launch claim is therefore made.
 
-Representative warm local-origin response times were 4–10 ms for the homepage and browser-local tool pages, 75–87 ms for country/MCC pages, and 218 ms for the HTTP 404 knowledge page. These numbers demonstrate no obvious origin regression but are not public latency or Core Web Vitals. Browser checks exercised the data-policy layout and JSON formatter at 379 px, including example loading and formatting. A same-origin API defect found in the first What Is My IP check was fixed; the rebuilt production client returned a normalized result. Public mobile and field performance validation remain pending DNS/TLS.
+## Server and security validation
 
-Forwarded-client handling was validated with a non-sensitive documentation address: the exact Compose gateway accepted the Nginx-sanitized client header, while the backend remained unpublished. Public directory traffic reports a 60-request Laravel limit; trusted internal frontend rendering reports a separate bounded 3000-request limit so SSR crawling cannot exhaust one global public bucket. Nginx applies an additional per-client public API limit and returns 429 when exceeded.
+- Ubuntu 24.04 is updated within its current release and boots kernel `6.8.0-139-generic`.
+- Docker Engine `29.8.0`, Docker Compose `v5.5.1`, and Ubuntu Nginx `1.24.0` are installed and enabled at boot.
+- The non-root `signalrate` deployment user connects with SSH keys and has sudo access. Root login, password login, keyboard-interactive authentication, and X11 forwarding are disabled.
+- UFW denies unsolicited inbound traffic by default and permits only SSH, HTTP, and HTTPS. A fresh SSH connection was verified after enabling it.
+- The official Cloudflare IPv4/IPv6 proxy ranges are installed in the host Nginx real-IP snippet. Forwarded client addresses are accepted only from those ranges.
+- Only ports 22 and 80 are currently public. Port 443 remains intentionally unconfigured until the real Cloudflare Origin CA certificate is installed. No self-signed certificate or Flexible SSL fallback was introduced.
+- Laravel runs in production with debug and display errors disabled, cached configuration/routes/views/events, OPcache enabled, and a non-root `www-data` runtime. Next.js runs as the non-root `signalrate` user.
+- At the final resource check, the host had 3.2 GiB available memory and 32 GiB free disk. The five containers used approximately 309 MiB combined and stayed within declared limits.
 
-## Prepared architecture
+## Deployment and data validation
 
-- Ubuntu host Nginx owns ports 80/443 and forwards only to `127.0.0.1:8080`.
-- Cloudflare proxies apex and `www`; Full (strict) validates a real origin certificate stored outside Git.
-- Container Nginx is the private gateway to standalone Next.js and PHP-FPM.
-- PostgreSQL and Redis live only on an internal Docker network. Neither publishes a host port.
-- Laravel trusts only the fixed Compose edge gateway passed through FastCGI. Host Nginx accepts Cloudflare client-IP headers only from Cloudflare's maintained source ranges and overwrites all forwarded headers.
-- Runtime limits reserve headroom on a 2-vCPU/4-GB host. Docker JSON logs and Laravel daily logs are bounded.
-- PostgreSQL, Redis, backend storage, and backend cache use named volumes; the database is the source of record.
+The release images are `signalrate/frontend-production:5fd19510b52b` and `signalrate/backend-production:5fd19510b52b`. The production environment file is mode `0600`, excluded from Git, uses generated secrets, keeps `APP_DEBUG=false`, and keeps ads and analytics disabled. No secret value is included in this report or repository.
 
-## Automated release behavior
+Forward-only migrations completed. The approved idempotent imports produced 248 countries/areas, 241 calling-code relationships, 27 reviewed MCC/MNC assignments, and 91 verified error records. Re-running the imports added no duplicate telecom records, and every migration reports `Ran`.
 
-`scripts/deploy-production.sh` refuses an unsafe environment, dirty checkout, debug mode, non-canonical origin, or enabled ads/analytics. It builds commit-tagged images, starts the private data tier, creates a pre-migration PostgreSQL dump, runs forward-only migrations plus approved `telecom:sync` and `errors:import` commands, starts the stack, waits for container health, and checks the loopback origin and API. It never runs destructive migrations, test fixtures, or automatic database rollback.
+Two same-server PostgreSQL custom-format backups were created before and after the migration/import sequence. Both have mode `0600` and matching SHA-256 sidecars. The populated archive is 165,435 bytes with 349 readable archive entries. A destructive restore was not performed against the production database. Encrypted off-server backup storage and a disposable restore destination remain manual launch requirements.
 
-`scripts/verify-production.sh` checks representative public routes, legal pages, tools, directories, redirects, security headers, local-origin leaks, and disabled `ads.txt`. The full public route inventory is regenerated with `SIGNALRATE_AUDIT_ORIGIN=https://signal-rate.com node scripts/audit-site.mjs` after DNS and TLS are live.
+The loopback origin returned the expected 200 responses for representative pages and APIs, a 404 for a missing route and disabled `ads.txt`, a canonical production sitemap, and production robots directives. The origin crawl covered 440 routes: 434 indexable, six intentional noindex, 49 tools, 98 error pages, 285 telecom pages, 22 network pages, 23 developer pages, and four mobile-plan pages. It found zero broken internal links and zero unexpected redirects.
 
-## URLs pending public validation
+## Repository validation
 
-- `https://signal-rate.com/`
-- `https://signal-rate.com/api/v1/countries?per_page=1`
-- `https://signal-rate.com/robots.txt`
-- `https://signal-rate.com/sitemap.xml`
-- `https://signal-rate.com/about`
-- `https://signal-rate.com/contact`
-- `https://signal-rate.com/privacy`
-- `https://signal-rate.com/terms`
-- `https://signal-rate.com/data-policy`
+- Laravel: 88 tests, 384 assertions, all passing.
+- Laravel Pint: 139 files, all passing.
+- Composer strict validation: passing.
+- Frontend Vitest: 35 tests across five files, all passing.
+- ESLint and TypeScript: passing.
+- Next.js production build: all 67 route entries compile successfully.
+- Local Milestone 9 environment remains healthy; its frontend, backend, PostgreSQL, and internal-only Redis continue to run, and representative frontend/API responses return 200.
 
-## External/manual tasks blocking go-live
+## Required external actions before final launch
 
-1. Provide the Ubuntu server IP/hostname, non-root SSH username, and verified local private-key path or SSH config alias.
-2. Add proxied Cloudflare apex and `www` DNS records and provision a valid origin certificate without exposing credentials to Git or logs.
-3. Provide a real public contact email and complete jurisdiction-appropriate review of legal pages.
-4. Configure encrypted off-host backup storage, uptime/certificate/disk monitoring, and a tested restore destination.
-5. Deploy, verify health, run the public crawl and mobile smoke tests, then record exact production results here.
+1. Restore or activate the domain if the registrar has suspended it, then replace the current `mydomainprovider.com` suspension nameservers with the exact nameservers assigned by the SignalRate Cloudflare zone.
+2. In Cloudflare DNS, create a proxied apex `A` record to `102.213.181.163` and a proxied `www` `CNAME` to `signal-rate.com`. Remove or correct stale records, including `prod`, unless that hostname is intentionally required.
+3. Generate a Cloudflare Origin CA PEM certificate covering `signal-rate.com` and `*.signal-rate.com` (or at minimum apex and `www`). Install the certificate and private key directly on the server as `/etc/ssl/signalrate/origin.pem` and `/etc/ssl/signalrate/origin.key`, readable only by root. Do not paste the private key into chat, Git, or logs.
+4. Set Cloudflare SSL/TLS encryption mode to **Full (strict)**. Do not use Flexible mode.
+5. Provide the real public contact email for the production environment; no placeholder address will be invented.
+6. Configure encrypted off-server backups and uptime, certificate-expiry, and disk monitoring, and identify a disposable restore-test destination.
 
-AdSense and analytics remain disabled. Search Console verification must be completed by the domain owner; no verification token has been invented.
+After items 1–5 are ready, install the prepared host TLS vhost, deploy with the guarded production script, run `scripts/verify-production.sh`, run the complete public crawl, verify mobile behavior and redirects, and observe logs after launch. Only then may Milestone 10 receive the requested final completion commit.
+
+AdSense and analytics remain disabled. Search Console verification remains a domain-owner action; no verification token has been invented.
