@@ -2,7 +2,9 @@
 
 ## Current state
 
-Advertising and analytics are disabled by default. No AdSense script, publisher ID, tracking pixel, personalized-ad request, or consent banner is shipped. Disabled ad slots render nothing and reserve no misleading blank space. Browser-local tools do not send their input to the backend.
+Advertising and analytics are disabled by default. No AdSense advertising script, tracking pixel, personalized-ad request, ad unit, or consent banner is shipped. Disabled ad slots render nothing and reserve no misleading blank space. Browser-local tools do not send their input to the backend.
+
+The global HTML head includes the operator-supplied `google-adsense-account` meta tag solely for AdSense site-ownership verification. This public verification metadata does not enable ads, load `adsbygoogle.js`, create ad units, enable Auto Ads, or change analytics. `NEXT_PUBLIC_ADSENSE_ENABLED` remains `false`, and `/ads.txt` retains its disabled behavior until a separately reviewed activation requires a valid seller record.
 
 Configuration switches:
 

@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: { type: "website", siteName: "SignalRate", title: "SignalRate", description: "Compare. Connect. Build." },
   twitter: { card: "summary_large_image" },
+  other: { "google-adsense-account": "ca-pub-9743834422526607" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
