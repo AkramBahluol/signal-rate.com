@@ -5,9 +5,11 @@ import type { GrowthKind } from "@/lib/growth-tools";
 import type { LocaleUrl } from "@/lib/i18n";
 import { common } from "@/lib/i18n";
 import {
+  addCalendar,
   compound,
   convertUnit,
   dataUsage,
+  dateDifference,
   exactAge,
   loan,
   percentage,
@@ -22,6 +24,7 @@ import {
 } from "@/lib/password";
 import { zonedWallTimeToUtc } from "@/lib/timezone";
 import { publicApiUrl } from "@/lib/api";
+import { NetworkTool } from "@/components/network/network-tool";
 
 const Field = ({
   label,
@@ -47,6 +50,9 @@ export function GrowthToolClient({
   locale?: LocaleUrl;
 }) {
   const c = common[locale ?? "en"];
+  if (kind === "subnet-reuse") return <NetworkTool mode="subnet" />;
+  if (kind === "bandwidth-reuse") return <NetworkTool mode="bandwidth" />;
+  if (kind === "download-reuse") return <NetworkTool mode="download-time" />;
   switch (kind) {
     case "password":
       return <Password c={c} />;
@@ -550,7 +556,23 @@ function Data({ c, locale }: { c: Copy; locale?: string }) {
   const r = dataUsage(h, rate);
   return (
     <Card>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Field label="Activity / quality">
+          <select
+            className={input}
+            onChange={(e) => setRate(+e.target.value)}
+            value={rate}
+          >
+            <option value="0.06">Web / social (estimate)</option>
+            <option value="0.15">Music streaming</option>
+            <option value="0.7">Video 480p</option>
+            <option value="1.5">Video 720p</option>
+            <option value="3">Video 1080p</option>
+            <option value="7">Video 4K</option>
+            <option value="1">Video calls</option>
+            <option value="0.1">Online gaming</option>
+          </select>
+        </Field>
         <Field label="Hours per day">
           <input
             className={input}
@@ -583,14 +605,27 @@ function Data({ c, locale }: { c: Copy; locale?: string }) {
 }
 function DateCalc({ c, locale }: { c: Copy; locale?: string }) {
   const [a, setA] = useState("2026-09-08"),
-    [b, setB] = useState("2026-12-07");
-  const days = Math.round(
-    (new Date(`${b}T00:00Z`).getTime() - new Date(`${a}T00:00Z`).getTime()) /
-      86400000,
-  );
+    [b, setB] = useState("2026-12-07"),
+    [mode, setMode] = useState<"difference" | "add">("difference"),
+    [amount, setAmount] = useState(90),
+    [unit, setUnit] = useState<"days" | "weeks" | "months" | "years">("days");
+  const from = new Date(`${a}T00:00Z`),
+    to = new Date(`${b}T00:00Z`);
+  const diff = dateDifference(from, to),
+    added = addCalendar(from, amount, unit);
   return (
     <Card>
       <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Mode">
+          <select
+            className={input}
+            value={mode}
+            onChange={(e) => setMode(e.target.value as typeof mode)}
+          >
+            <option value="difference">Difference between dates</option>
+            <option value="add">Add or subtract time</option>
+          </select>
+        </Field>
         <Field label="Start date">
           <input
             className={input}
@@ -599,25 +634,63 @@ function DateCalc({ c, locale }: { c: Copy; locale?: string }) {
             onChange={(e) => setA(e.target.value)}
           />
         </Field>
-        <Field label="End date">
-          <input
-            className={input}
-            type="date"
-            value={b}
-            onChange={(e) => setB(e.target.value)}
-          />
-        </Field>
+        {mode === "difference" ? (
+          <Field label="End date">
+            <input
+              className={input}
+              type="date"
+              value={b}
+              onChange={(e) => setB(e.target.value)}
+            />
+          </Field>
+        ) : (
+          <>
+            <Field label="Amount (negative subtracts)">
+              <input
+                className={input}
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(+e.target.value)}
+              />
+            </Field>
+            <Field label="Unit">
+              <select
+                className={input}
+                value={unit}
+                onChange={(e) => setUnit(e.target.value as typeof unit)}
+              >
+                {["days", "weeks", "months", "years"].map((x) => (
+                  <option key={x}>{x}</option>
+                ))}
+              </select>
+            </Field>
+          </>
+        )}
       </div>
       <p className="result-card mt-5 text-xl font-bold">
         {c.result}:{" "}
-        {Number.isFinite(days)
-          ? `${fmt(days, locale ?? "en")} days`
-          : c.invalid}
+        {mode === "difference"
+          ? `${diff.years * diff.sign} years, ${diff.months} months, ${diff.days} days (${fmt(diff.totalDays * diff.sign, locale ?? "en")} total days)`
+          : new Intl.DateTimeFormat(locale ?? "en", {
+              dateStyle: "long",
+              timeZone: "UTC",
+            }).format(added)}
       </p>
     </Card>
   );
 }
 function Timezone({ c, locale }: { c: Copy; locale?: string }) {
+  const zones = [
+    "Africa/Tripoli",
+    "America/New_York",
+    "Europe/London",
+    "Asia/Tokyo",
+    "Asia/Seoul",
+    "Europe/Paris",
+    "Europe/Berlin",
+    "Asia/Kolkata",
+    "Asia/Jakarta",
+  ];
   const [date, setDate] = useState(new Date().toISOString().slice(0, 16)),
     [zone, setZone] = useState("Africa/Tripoli"),
     [dest, setDest] = useState([
@@ -664,6 +737,45 @@ function Timezone({ c, locale }: { c: Copy; locale?: string }) {
             ))}
           </select>
         </Field>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-3">
+        <select
+          aria-label="Add destination timezone"
+          className={input}
+          defaultValue=""
+          onChange={(e) => {
+            if (e.target.value && !dest.includes(e.target.value))
+              setDest([...dest, e.target.value]);
+            e.target.value = "";
+          }}
+        >
+          <option value="">Add destination…</option>
+          {zones
+            .filter((z) => z !== zone && !dest.includes(z))
+            .map((z) => (
+              <option key={z}>{z}</option>
+            ))}
+        </select>
+        <button
+          className="button-secondary"
+          onClick={() => {
+            const first = dest[0];
+            setDest([zone, ...dest.slice(1)]);
+            setZone(first);
+          }}
+        >
+          Swap
+        </button>
+        <button
+          className="button-secondary"
+          onClick={() =>
+            navigator.clipboard.writeText(
+              out.map((x) => x.join(": ")).join("\n"),
+            )
+          }
+        >
+          {c.copy}
+        </button>
       </div>
       <div className="mt-5 grid gap-3">
         {out.map(([z, v]) => (
@@ -736,23 +848,22 @@ function RemoteCheck({ kind, c }: { kind: GrowthKind; c: Copy }) {
     setBusy(true);
     setResult(undefined);
     try {
-      const path = ({
-        down: "availability",
-        chain: "certificate-chain",
-        tls: "tls-versions",
-        https: "https-health",
-      } as Partial<Record<GrowthKind, string>>)[kind]!;
-      const res = await fetch(
-        `${publicApiUrl}/api/v1/network/${path}`,
+      const path = (
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({ target }),
+          down: "availability",
+          chain: "certificate-chain",
+          tls: "tls-versions",
+          https: "https-health",
+        } as Partial<Record<GrowthKind, string>>
+      )[kind]!;
+      const res = await fetch(`${publicApiUrl}/api/v1/network/${path}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
-      );
+        body: JSON.stringify({ target }),
+      });
       setResult(await res.json());
     } catch {
       setResult({ message: "Unable to perform check." });

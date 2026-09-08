@@ -35,6 +35,7 @@ final class SearchController
             ['Hash Generator', '/developer-tools/hash-generator', 'hash sha256 sha-256 sha384 sha512 digest'], ['HTML Encoder / Decoder', '/developer-tools/html-encoder', 'html encode decode entities escape'],
             ['Text Diff', '/developer-tools/text-diff', 'text diff compare added removed'], ['Slug Generator', '/developer-tools/slug-generator', 'slug seo url generate'],
         ]))->filter($matchesTool)->map(fn ($tool) => ['type' => 'developer_tool', 'title' => $tool[0], 'subtitle' => 'Browser-based developer utility', 'url' => $tool[1]]);
+        $calculators = collect(config('tool_catalog.calculators', []))->filter($matchesTool)->map(fn ($tool) => ['type' => 'calculator', 'title' => $tool[0], 'subtitle' => 'Calculator', 'url' => $tool[1]]);
         $tools = collect([['SMS Character Counter', '/tools/sms-character-counter', 'sms character segment'], ['GSM-7 Checker', '/tools/gsm7-checker', 'gsm encoding sms'], ['Unicode SMS Checker', '/tools/unicode-sms-checker', 'unicode ucs2 sms'], ['SMS Segment Calculator', '/tools/sms-segment-calculator', 'multipart sms'], ['E.164 Phone Formatter', '/tools/e164-phone-formatter', 'phone number'], ['MCC/MNC Lookup', '/tools/mcc-mnc-lookup', 'network operator']])->filter($matchesTool)->map(fn ($t) => ['type' => 'tool', 'title' => $t[0], 'subtitle' => 'Tool', 'url' => $t[1]]);
         $countries = Country::where('active', true)->where(fn ($q) => $q->whereLike('name', "%{$term}%")->orWhereLike('iso2', $term)->orWhereLike('iso3', $term))->limit(8)->get()->map(fn ($c) => ['type' => 'country', 'title' => $c->name, 'subtitle' => $c->iso2.' · '.$c->continent, 'url' => '/countries/'.$c->slug]);
         $codes = CallingCode::with('country')->where('code', 'like', ltrim($term, '+').'%')->limit(8)->get()->map(fn ($c) => ['type' => 'calling_code', 'title' => '+'.$c->code, 'subtitle' => $c->country->name, 'url' => '/calling-codes/'.$c->code]);
@@ -63,6 +64,6 @@ final class SearchController
         }
         $errors = $errors->limit(8)->get()->map(fn ($error) => ['type' => 'error', 'title' => $error->family->name.' '.$error->code.' — '.$error->title, 'subtitle' => 'Verified error reference', 'url' => '/errors/'.$error->family->slug.'/'.$error->slug]);
 
-        return response()->json(['data' => $developerTools->concat($tools)->concat($networkTools)->concat($errors)->concat($countries)->concat($codes)->concat($networks)->concat($carriers)->concat($plans)->values()]);
+        return response()->json(['data' => $developerTools->concat($tools)->concat($networkTools)->concat($calculators)->concat($errors)->concat($countries)->concat($codes)->concat($networks)->concat($carriers)->concat($plans)->values()]);
     }
 }

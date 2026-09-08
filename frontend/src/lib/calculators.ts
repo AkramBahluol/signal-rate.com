@@ -170,8 +170,18 @@ export const units = {
     ft: linear(0.3048),
   },
   mass: { kg: linear(1), lb: linear(0.45359237) },
-  area: { "m²": linear(1), "km²": linear(1e6), "ft²": linear(0.09290304), acre: linear(4046.8564224) },
-  volume: { L: linear(1), mL: linear(0.001), "m³": linear(1000), "gal (US)": linear(3.785411784) },
+  area: {
+    "m²": linear(1),
+    "km²": linear(1e6),
+    "ft²": linear(0.09290304),
+    acre: linear(4046.8564224),
+  },
+  volume: {
+    L: linear(1),
+    mL: linear(0.001),
+    "m³": linear(1000),
+    "gal (US)": linear(3.785411784),
+  },
   speed: {
     "m/s": linear(1),
     "km/h": linear(1 / 3.6),
@@ -189,9 +199,19 @@ export const units = {
     GiB: linear(1073741824),
   },
   time: { s: linear(1), min: linear(60), h: linear(3600), day: linear(86400) },
-  energy: { J: linear(1), kJ: linear(1000), Wh: linear(3600), kWh: linear(3.6e6) },
+  energy: {
+    J: linear(1),
+    kJ: linear(1000),
+    Wh: linear(3600),
+    kWh: linear(3.6e6),
+  },
   power: { W: linear(1), kW: linear(1000), hp: linear(745.699871582) },
-  pressure: { Pa: linear(1), kPa: linear(1000), bar: linear(100000), psi: linear(6894.757293) },
+  pressure: {
+    Pa: linear(1),
+    kPa: linear(1000),
+    bar: linear(100000),
+    psi: linear(6894.757293),
+  },
   temperature: {
     C: (v: number) => v,
     F: (v: number) => ((v - 32) * 5) / 9,

@@ -54,24 +54,6 @@ export function GrowthToolPage({
                   </Link>
                 );
               })}
-            <Link
-              className="rounded-2xl border border-slate-200 bg-white p-5"
-              href={`${prefix}/network/download-time-calculator`}
-            >
-              <b>Download Time Calculator</b>
-            </Link>
-            <Link
-              className="rounded-2xl border border-slate-200 bg-white p-5"
-              href={`${prefix}/network/bandwidth-calculator`}
-            >
-              <b>Bandwidth Calculator</b>
-            </Link>
-            <Link
-              className="rounded-2xl border border-slate-200 bg-white p-5"
-              href={`${prefix}/network/subnet-calculator`}
-            >
-              <b>Subnet Calculator</b>
-            </Link>
           </div>
         </main>
         <Footer />
