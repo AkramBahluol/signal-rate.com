@@ -638,7 +638,6 @@ function Timezone({ c, locale }: { c: Copy; locale?: string }) {
         dateStyle: "medium",
         timeStyle: "short",
         timeZone: z,
-        timeZoneName: "short",
       }).format(d),
     ]);
   }, [date, dest, locale, zone]);

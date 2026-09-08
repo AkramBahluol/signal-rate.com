@@ -9,7 +9,7 @@ final class PublicUrlGuard
 {
     public function __construct(private readonly NetworkAddress $addresses, private readonly HostnameValidator $hostnames, private readonly DnsResolver $dns) {}
 
-    public function validate(string $input): array
+    public function validate(string $input, bool $standardPortsOnly = false): array
     {
         $url = filter_var(trim($input), FILTER_VALIDATE_URL);
         if (! is_string($url)) {
@@ -23,7 +23,7 @@ final class PublicUrlGuard
             throw new InvalidArgumentException('URLs containing credentials are blocked.');
         }
         $port = (int) ($parts['port'] ?? (($parts['scheme'] ?? '') === 'https' ? 443 : 80));
-        if (! in_array($port, [80, 443], true)) {
+        if ($standardPortsOnly && ! in_array($port, [80, 443], true)) {
             throw new InvalidArgumentException('Only standard HTTP and HTTPS ports are allowed for this check.');
         }
         $host = $parts['host'] ?? '';

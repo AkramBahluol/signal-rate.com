@@ -272,6 +272,16 @@ const localeLabels: Record<
     descriptions: "Perhitungan akurat dan ramah privasi: ",
   },
 };
+const translatedTitles:Record<Exclude<LocaleUrl,"ja">,Record<GrowthKind,string>>={
+ "pt-br":{hub:"Calculadoras SignalRate",password:"Gerador de senhas seguras",timezone:"Conversor de fuso horário",down:"Site está fora do ar?",ping:"Teste de ping e latência",percentage:"Calculadora de porcentagem",age:"Calculadora de idade exata",date:"Calculadora de datas",time:"Calculadora de tempo",loan:"Calculadora de empréstimo",compound:"Calculadora de juros compostos",currency:"Conversor de moedas",unit:"Conversor de unidades",data:"Calculadora de uso de dados",chain:"Verificador da cadeia de certificados",certificate:"Decodificador de certificado X.509",csr:"Decodificador de CSR",tls:"Verificador de versões TLS",https:"Verificador de HTTPS"},
+ de:{hub:"SignalRate Rechner",password:"Sicherer Passwortgenerator",timezone:"Zeitzonen-Umrechner",down:"Ist die Website erreichbar?",ping:"Ping- und Latenztest",percentage:"Prozentrechner",age:"Exakter Altersrechner",date:"Datumsrechner",time:"Zeitrechner",loan:"Kreditrechner",compound:"Zinseszinsrechner",currency:"Währungsrechner",unit:"Einheitenumrechner",data:"Datenverbrauchsrechner",chain:"Zertifikatsketten-Prüfer",certificate:"X.509-Zertifikat-Decoder",csr:"CSR-Decoder",tls:"TLS-Versionsprüfer",https:"HTTPS-Prüfer"},
+ es:{hub:"Calculadoras SignalRate",password:"Generador de contraseñas seguras",timezone:"Conversor de zonas horarias",down:"¿Está caído el sitio?",ping:"Prueba de ping y latencia",percentage:"Calculadora de porcentajes",age:"Calculadora de edad exacta",date:"Calculadora de fechas",time:"Calculadora de tiempo",loan:"Calculadora de préstamos",compound:"Calculadora de interés compuesto",currency:"Conversor de divisas",unit:"Conversor de unidades",data:"Calculadora de uso de datos",chain:"Comprobador de cadena de certificados",certificate:"Decodificador de certificado X.509",csr:"Decodificador de CSR",tls:"Comprobador de versiones TLS",https:"Comprobador HTTPS"},
+ hi:{hub:"SignalRate कैलकुलेटर",password:"सुरक्षित पासवर्ड जेनरेटर",timezone:"समय क्षेत्र कन्वर्टर",down:"क्या वेबसाइट बंद है?",ping:"पिंग और लेटेंसी टेस्ट",percentage:"प्रतिशत कैलकुलेटर",age:"सटीक आयु कैलकुलेटर",date:"तारीख कैलकुलेटर",time:"समय कैलकुलेटर",loan:"ऋण कैलकुलेटर",compound:"चक्रवृद्धि ब्याज कैलकुलेटर",currency:"मुद्रा कन्वर्टर",unit:"इकाई कन्वर्टर",data:"डेटा उपयोग कैलकुलेटर",chain:"सर्टिफिकेट चेन चेकर",certificate:"X.509 सर्टिफिकेट डिकोडर",csr:"CSR डिकोडर",tls:"TLS संस्करण चेकर",https:"HTTPS चेकर"},
+ fr:{hub:"Calculatrices SignalRate",password:"Générateur de mots de passe sécurisés",timezone:"Convertisseur de fuseaux horaires",down:"Le site est-il indisponible ?",ping:"Test de ping et de latence",percentage:"Calculatrice de pourcentage",age:"Calculatrice d’âge exact",date:"Calculatrice de dates",time:"Calculatrice de temps",loan:"Calculatrice de prêt",compound:"Calculatrice d’intérêts composés",currency:"Convertisseur de devises",unit:"Convertisseur d’unités",data:"Calculatrice de consommation de données",chain:"Vérificateur de chaîne de certificats",certificate:"Décodeur de certificat X.509",csr:"Décodeur de CSR",tls:"Vérificateur de versions TLS",https:"Vérificateur HTTPS"},
+ ko:{hub:"SignalRate 계산기",password:"안전한 비밀번호 생성기",timezone:"시간대 변환기",down:"사이트 접속 상태 확인",ping:"핑 및 지연 시간 테스트",percentage:"백분율 계산기",age:"정확한 나이 계산기",date:"날짜 계산기",time:"시간 계산기",loan:"대출 계산기",compound:"복리 계산기",currency:"환율 계산기",unit:"단위 변환기",data:"데이터 사용량 계산기",chain:"인증서 체인 검사기",certificate:"X.509 인증서 디코더",csr:"CSR 디코더",tls:"TLS 버전 검사기",https:"HTTPS 검사기"},
+ ar:{hub:"حاسبات SignalRate",password:"مولّد كلمات مرور آمنة",timezone:"محوّل المناطق الزمنية",down:"هل الموقع متوقف؟",ping:"اختبار الاستجابة وزمن الوصول",percentage:"حاسبة النسبة المئوية",age:"حاسبة العمر الدقيقة",date:"حاسبة التاريخ",time:"حاسبة الوقت",loan:"حاسبة القروض",compound:"حاسبة الفائدة المركبة",currency:"محوّل العملات",unit:"محوّل الوحدات",data:"حاسبة استهلاك البيانات",chain:"فاحص سلسلة الشهادات",certificate:"محلل شهادة X.509",csr:"محلل طلب CSR",tls:"فاحص إصدارات TLS",https:"فاحص HTTPS"},
+ id:{hub:"Kalkulator SignalRate",password:"Pembuat kata sandi aman",timezone:"Konverter zona waktu",down:"Apakah situs sedang tidak aktif?",ping:"Tes ping dan latensi",percentage:"Kalkulator persentase",age:"Kalkulator usia tepat",date:"Kalkulator tanggal",time:"Kalkulator waktu",loan:"Kalkulator pinjaman",compound:"Kalkulator bunga majemuk",currency:"Konverter mata uang",unit:"Konverter satuan",data:"Kalkulator penggunaan data",chain:"Pemeriksa rantai sertifikat",certificate:"Dekoder sertifikat X.509",csr:"Dekoder CSR",tls:"Pemeriksa versi TLS",https:"Pemeriksa HTTPS"}
+};
 export function localizedTool(tool: GrowthTool, locale?: LocaleUrl) {
   if (!locale) return tool;
   if (locale === "ja") {
@@ -281,7 +291,7 @@ export function localizedTool(tool: GrowthTool, locale?: LocaleUrl) {
   const l = localeLabels[locale];
   return {
     ...tool,
-    title: `${l.prefix}: ${tool.title}`,
-    description: `${l.descriptions}${tool.description}`,
+    title: translatedTitles[locale][tool.kind],
+    description: `${l.descriptions}${translatedTitles[locale][tool.kind]}.`,
   };
 }

@@ -9,11 +9,11 @@ final class WebDiagnosticsService
 {
     public function __construct(private readonly PublicUrlGuard $guard, private readonly HttpProbe $http) {}
 
-    public function redirects(string $url): array
+    public function redirects(string $url, bool $standardPortsOnly = false): array
     {
         $hops = [];
         for ($i = 0; $i < 6; $i++) {
-            $target = $this->guard->validate($url);
+            $target = $this->guard->validate($url, $standardPortsOnly);
             $response = $this->http->request($target);
             $hops[] = ['url' => $target['url'], 'status' => $response['status'], 'location' => $response['location'], 'response_time_ms' => $response['response_time_ms'] ?? null];
             if ($response['location'] === null || $response['status'] < 300 || $response['status'] >= 400) {
@@ -62,7 +62,7 @@ final class WebDiagnosticsService
     public function availability(string $input): array
     {
         $url = $this->normalUrl($input, 'https');
-        $result = $this->redirects($url);
+        $result = $this->redirects($url, true);
         $last = $result['hops'][array_key_last($result['hops'])];
         $tls = null;
         if (str_starts_with($result['final_url'], 'https://')) {
@@ -78,7 +78,7 @@ final class WebDiagnosticsService
 
     public function certificateChain(string $hostname): array
     {
-        $target = $this->guard->validate($this->normalUrl($hostname, 'https'));
+        $target = $this->guard->validate($this->normalUrl($hostname, 'https'), true);
         [$params, $crypto] = $this->tlsConnect($target);
         $certificates = [];
         foreach (($params['options']['ssl']['peer_certificate_chain'] ?? []) as $index => $certificate) {
@@ -95,7 +95,7 @@ final class WebDiagnosticsService
 
     public function tlsVersions(string $hostname): array
     {
-        $target = $this->guard->validate($this->normalUrl($hostname, 'https'));
+        $target = $this->guard->validate($this->normalUrl($hostname, 'https'), true);
         $versions = ['TLS 1.0' => 'Not tested by current runtime', 'TLS 1.1' => 'Not tested by current runtime'];
         foreach (['TLS 1.2' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT, 'TLS 1.3' => defined('STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT') ? STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT : null] as $label => $method) {
             if ($method === null) {
@@ -116,19 +116,19 @@ final class WebDiagnosticsService
 
     public function httpsHealth(string $input): array
     {
-        $validated = $this->guard->validate($this->normalUrl($input, 'https'));
+        $validated = $this->guard->validate($this->normalUrl($input, 'https'), true);
         $host = $validated['host'];
         $http = null;
         $https = null;
         $certificate = null;
         $warnings = [];
         try {
-            $http = $this->redirects("http://{$host}/");
+            $http = $this->redirects("http://{$host}/", true);
         } catch (\Throwable) {
             $warnings[] = 'HTTP did not respond.';
         }
         try {
-            $https = $this->redirects("https://{$host}/");
+            $https = $this->redirects("https://{$host}/", true);
             $certificate = $this->certificate($host);
         } catch (\Throwable) {
             $warnings[] = 'HTTPS or its certificate could not be verified.';
