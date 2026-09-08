@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/network/ip-blacklist-check", "/network/subnet-calculator", "/network/cidr-calculator", "/network/ip-calculator",
     "/tools", "/tools/sms-character-counter",
     "/tools/gsm7-checker", "/tools/sms-segment-calculator", "/tools/unicode-sms-checker",
-    "/tools/e164-phone-formatter", "/tools/mcc-mnc-lookup", "/countries", "/calling-codes", "/mcc", "/carriers", "/errors", "/about", "/contact", "/privacy", "/terms", "/methodology",
+    "/tools/e164-phone-formatter", "/tools/mcc-mnc-lookup", "/countries", "/calling-codes", "/mcc", "/carriers", "/errors", "/about", "/contact", "/privacy", "/terms", "/methodology", "/data-policy",
   ];
   paths.push("/developer-tools",...developerTools.map(tool=>developerToolPath(tool.slug)),"/network/email-security",...networkTools.map(tool=>tool.path));
   const base = [...new Set(paths)].map(path => ({ url: `${siteUrl}${path}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: path === "" ? 1 : 0.8 }));

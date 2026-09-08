@@ -42,7 +42,7 @@ const classify = path => {
   if (["/tools", "/countries", "/calling-codes", "/mcc", "/carriers"].includes(path)) return ["telecom", "directory", "telecom reference"];
   if (/^\/(countries|calling-codes|mcc|carriers)\//.test(path)) return ["telecom", "reference detail", "telecom reference"];
   if (path.startsWith("/mobile-plans")) return ["mobile plans", "comparison foundation", "commercial comparison"];
-  if (["/about", "/contact", "/privacy", "/terms", "/methodology"].includes(path)) return ["trust", "legal/trust", "informational"];
+  if (["/about", "/contact", "/privacy", "/terms", "/methodology", "/data-policy"].includes(path)) return ["trust", "legal/trust", "informational"];
   if (path === "/search") return ["search", "search results", "navigation"];
   return ["core", "landing page", "navigation"];
 };

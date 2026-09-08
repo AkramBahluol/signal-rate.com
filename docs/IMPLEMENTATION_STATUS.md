@@ -178,6 +178,16 @@
 - Directory controllers expose read-only, rate-limited `/api/v1` endpoints; public browser access is limited by CORS to the configured frontend URL.
 - Telecom records carry `source_name`, `source_url`, `last_verified_at`, and `verification_status`. UI source notices never label unverified rows as current.
 
+## Milestone 10 production launch (in progress)
+
+- Created the `milestone-10-production-launch` branch from verified Milestone 9 commit `501147a` without discarding user work.
+- Hardened the production Compose topology with a loopback-only gateway, separate edge/internal-data networks, exact trusted-proxy addressing, bounded resources/PIDs/logs, non-root application images, persistent data/cache volumes, and private PostgreSQL/Redis services.
+- Added host Nginx TLS/canonical-host configuration, Cloudflare real-IP range updater, safe commit-tagged deployment orchestration, pre-migration PostgreSQL backups, forward-only approved imports, public smoke verification, rollback guidance, firewall/SSH precautions, disk retention, and restore instructions.
+- Added `/data-policy` with canonical metadata and sitemap/footer discovery. Ads and analytics remain disabled by mandatory deployment checks.
+- Public launch remains blocked externally: `signal-rate.com` and `www.signal-rate.com` returned NXDOMAIN on 8 September 2026, and no server SSH target/key, Cloudflare configuration/certificate, real contact email, or off-host backup target was supplied. No production migration or public HTTPS validation is claimed. See `PRODUCTION_LAUNCH_REPORT.md`.
+- Local production validation passed with standalone Next.js, cached PHP-FPM/Laravel, Nginx, persistent PostgreSQL, and Redis all healthy. Safe migrations imported 248 countries/areas, 241 calling-code relationships, 27 reviewed MCC/MNC assignments, and 91 verified errors. The production-origin crawl covered 440 routes (434 indexable and six intentional noindex) with zero broken links or redirects; database and Redis ports remained private.
+- Final repository validation for the prepared release: Laravel 88 tests/384 assertions, Pint 139 files, Composer strict validation, frontend 35 tests, ESLint, and a 67-entry Next.js production build all pass. Linux backup validation produced a readable 349-entry custom PostgreSQL archive with a valid SHA-256 checksum. Mobile browser checks exercised the new data policy and interactive JSON tool; the same-origin API issue found in What Is My IP was fixed and revalidated.
+
 ## Known data state
 - The bundled source-reviewed dataset contains 248 UN M49 countries/areas, 241 E.164 calling-code relationships, 27 BNetzA German MCC/MNC assignments, and three explicitly matched German public operator entities. No assignment or carrier capability was invented.
 - Global MCC/MNC coverage intentionally remains regulator-by-regulator rather than copying an unlicensed secondary directory or redistributing ITU operational-bulletin data without confirmed reuse rights. Markets without a reviewed permitted source retain honest empty states.

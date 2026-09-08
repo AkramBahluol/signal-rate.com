@@ -1,13 +1,13 @@
 # SignalRate site inventory
 
-Generated 2026-09-08T01:50:42.370Z by `node scripts/audit-site.mjs` against `http://localhost:3000`. The JSON companion is the machine-readable source of truth and includes titles, descriptions, canonicals, schema types, verification classification, intent, link counts, and content flags.
+Generated 2026-09-08T05:29:30.556Z by `node scripts/audit-site.mjs` against `http://127.0.0.1:8080`. The JSON companion is the machine-readable source of truth and includes titles, descriptions, canonicals, schema types, verification classification, intent, link counts, and content flags.
 
 ## Totals
 
-- total routes: 439
-- indexable routes: 433
+- total routes: 440
+- indexable routes: 434
 - noindex routes: 6
-- sitemap routes: 433
+- sitemap routes: 434
 - tool pages: 49
 - error pages: 98
 - telecom pages: 285
@@ -272,6 +272,7 @@ Generated 2026-09-08T01:50:42.370Z by `node scripts/audit-site.mjs` against `htt
 | `/countries/yemen` | 200 | telecom | yes | yes | no |
 | `/countries/zambia` | 200 | telecom | yes | yes | no |
 | `/countries/zimbabwe` | 200 | telecom | yes | yes | no |
+| `/data-policy` | 200 | trust | yes | yes | no |
 | `/developer-tools` | 200 | developer | yes | yes | no |
 | `/developer-tools/base64` | 200 | developer | yes | yes | no |
 | `/developer-tools/cron-generator` | 200 | developer | yes | yes | no |

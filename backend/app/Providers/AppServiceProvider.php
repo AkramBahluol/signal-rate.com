@@ -14,6 +14,9 @@ use App\Services\Network\Providers\NativeDnsResolver;
 use App\Services\Network\Providers\NativeReverseDnsResolver;
 use App\Services\Network\Providers\UnavailableAsnProvider;
 use App\Services\Network\Providers\UnavailableGeoIpProvider;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,6 +39,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        RateLimiter::for('directory', function (Request $request): Limit {
+            // The private Nginx gateway overwrites this header from the fixed
+            // frontend container address. The backend has no published port.
+            $internalFrontend = $request->header('X-SignalRate-Internal') === 'frontend';
+            $limit = $internalFrontend
+                ? max(1, (int) config('signalrate.internal_directory_rate_limit', 3000))
+                : max(1, (int) config('signalrate.directory_rate_limit', 60));
+            $key = $internalFrontend ? 'internal-frontend' : $request->ip();
+
+            return Limit::perMinute($limit)->by((string) $key);
+        });
     }
 }
