@@ -26,4 +26,11 @@ describe("ads.txt readiness", () => {
     expect(response.status).toBe(200);
     expect(await response.text()).toBe(`${process.env.ADS_TXT_LINE}\n`);
   });
+
+  it("serves the reviewed SignalRate Google seller record", async () => {
+    process.env.ADS_TXT_LINE = "google.com, pub-9743834422526607, DIRECT, f08c47fec0942fa0";
+    const response = GET();
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe(`${process.env.ADS_TXT_LINE}\n`);
+  });
 });

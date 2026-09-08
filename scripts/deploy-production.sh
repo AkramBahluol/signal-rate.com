@@ -14,7 +14,9 @@ done
 grep -Eq '^APP_ENV=production$' "$environment_file" || { echo "APP_ENV must be production." >&2; exit 1; }
 grep -Eq '^APP_DEBUG=false$' "$environment_file" || { echo "APP_DEBUG must be false." >&2; exit 1; }
 grep -Eq '^SITE_URL=https://signal-rate\.com$' "$environment_file" || { echo "SITE_URL must use the canonical HTTPS origin." >&2; exit 1; }
-grep -Eq '^NEXT_PUBLIC_ADSENSE_ENABLED=false$' "$environment_file" || { echo "AdSense must remain disabled for this launch." >&2; exit 1; }
+grep -Eq '^NEXT_PUBLIC_ADSENSE_ENABLED=true$' "$environment_file" || { echo "AdSense must be explicitly enabled for this release." >&2; exit 1; }
+grep -Eq '^NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-9743834422526607$' "$environment_file" || { echo "The reviewed AdSense client is missing." >&2; exit 1; }
+grep -Eq '^ADS_TXT_LINE=google\.com, pub-9743834422526607, DIRECT, f08c47fec0942fa0$' "$environment_file" || { echo "The reviewed Google seller declaration is missing." >&2; exit 1; }
 grep -Eq '^NEXT_PUBLIC_ANALYTICS_ENABLED=false$' "$environment_file" || { echo "Analytics must remain disabled until a real reviewed configuration exists." >&2; exit 1; }
 
 chmod 600 "$environment_file"

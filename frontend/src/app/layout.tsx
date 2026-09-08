@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
-import {siteUrl} from "@/lib/site";
+import {adsEnabled,adsenseClient,siteUrl} from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      {adsEnabled&&<Script async crossOrigin="anonymous" id="google-adsense-loader" src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`} strategy="beforeInteractive"/>}
       <body className="min-h-full flex flex-col"><a href="#site-content" className="skip-link">Skip to main content</a><div id="site-content" className="contents">{children}</div><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} /></body>
     </html>
   );
