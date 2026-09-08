@@ -18,6 +18,8 @@ Public web searches for `site:signal-rate.com`, `site:signal-rate.com/tools`, an
 
 No Google Search Console verification TXT record was detected. Therefore impressions, clicks, submitted-versus-indexed counts, exclusions, Core Web Vitals field data, manual actions, and security-issue status are not yet available. These values must not be guessed.
 
+Search Console property verification and sitemap submission remain owner-side external actions. Technical search readiness is verified, so those account and DNS actions do not block Milestone 11 completion.
+
 ## Next operator measurement
 
 After the domain owner verifies the Search Console Domain property and submits the sitemap, record:

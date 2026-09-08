@@ -6,7 +6,7 @@ This runbook defines the Milestone 11 operations baseline for `https://signal-ra
 
 The production host has restic `0.16.4`, the SignalRate systemd units, protected operations configuration, and host-Nginx log rotation installed. `signalrate-health.timer` is enabled and its live check passes with all five containers healthy, 19% disk use, and approximately 78% memory available at the validation point. The synthetic 5xx test detected exactly one newly appended error after establishing its baseline.
 
-The backup workflow was exercised end to end against a temporary restic repository with 100% data-pack verification. It created a live custom-format dump, validated its checksum and 345 archive entries, encrypted it into restic, restored it to an isolated temporary directory, and revalidated the checksum/archive. The temporary repository and password were then removed. This proves the workflow but is not an off-server copy; the production backup timers remain disabled until an operator-owned remote repository is supplied.
+The backup workflow was exercised end to end against a temporary restic repository with 100% data-pack verification. It created a live custom-format dump, validated its checksum and 345 archive entries, encrypted it into restic, restored it to an isolated temporary directory, and revalidated the checksum/archive. The temporary repository and password were then removed. Off-server encrypted backups are **deferred by operator decision — not a Milestone 11 blocker**. No paid storage or fabricated remote destination is configured, and both remote-backup timers remain safely disabled.
 
 The active Codex heartbeat `SignalRate production monitor` checks the public edge and, when SSH is available, the host health state every ten minutes. It remains silent while healthy and notifies on failure, warning, or recovery. No server webhook is currently configured.
 
@@ -31,13 +31,27 @@ sudo systemctl status signalrate-health.timer signalrate-health.service
 sudo journalctl -u signalrate-health.service -u 'signalrate-alert@*' --since today
 ```
 
-## Encrypted off-server backups
+## Backup policy
+
+SignalRate retains its same-server PostgreSQL backup capability and manual process. Run the following from `/opt/signalrate` whenever an on-server snapshot is required:
+
+```bash
+./scripts/backup-postgres.sh
+sha256sum --check backups/<backup-file>.dump.sha256
+docker compose -f docker-compose.prod.yml --env-file .env.production exec -T postgres pg_restore --list < backups/<backup-file>.dump
+```
+
+The script writes a PostgreSQL custom-format archive and SHA-256 sidecar under `/opt/signalrate/backups`, uses file mode `0600`, and applies the configured local retention period. The final Milestone 11 validation created and verified a live same-server archive successfully. This protects routine operator workflows but is not represented as protection from total server loss.
+
+### Optional future encrypted off-server backups
 
 SignalRate uses restic because it encrypts and authenticates data before transmission and supports S3-compatible, SFTP, and other remote repositories. `signalrate-backup.timer` creates a custom-format PostgreSQL dump, validates its SHA-256 checksum and archive table, uploads only the dump/checksum pair to restic, checks repository metadata, and retains seven daily, four weekly, and six monthly snapshots.
 
 `signalrate-backup-verify.timer` runs weekly. It checks a sample of encrypted repository data, restores the latest snapshot into a temporary directory, verifies the checksum, and inspects the PostgreSQL archive. It never restores into the production database.
 
-The timers remain disabled until a real off-server restic repository is configured. This prevents a green timer from silently writing only to the production host.
+Off-server encrypted backups are deferred by operator decision and are not a launch or Milestone 11 completion blocker. `signalrate-backup.timer` and `signalrate-backup-verify.timer` remain installed but disabled whenever no remote repository is configured. The tested automation remains available so an operator can add a remote repository later without redesigning the backup or restore-verification system.
+
+No Cloudflare R2, S3, SFTP, or other paid storage integration should be enabled under the current policy. If the operator changes that policy later, the optional activation procedure is:
 
 1. Select an operator-owned S3-compatible bucket, SFTP host, or other supported restic backend in a separate failure domain.
 2. Put its repository URL and provider credentials in `/etc/signalrate/operations.env` with mode `0600`.
@@ -67,6 +81,6 @@ Review disk usage monthly with `df -h /`, `docker system df`, database size, and
 
 Run `node scripts/verify-search-readiness.mjs` after releases that affect routing, metadata, robots, or the sitemap. The check validates the public robots file, sitemap origin/uniqueness, and representative canonical/indexable templates.
 
-Google Search Console still requires a domain-owner action: add the Domain property, publish the exact Google-provided DNS TXT token, and submit `https://signal-rate.com/sitemap.xml`. Do not invent verification records or request indexing for intentional noindex/empty pages.
+Google Search Console still requires a domain-owner action: add the Domain property, publish the exact Google-provided DNS TXT token, and submit `https://signal-rate.com/sitemap.xml`. This external ownership action does not block completion of the technical milestone. Do not invent verification records or request indexing for intentional noindex/empty pages.
 
 The production browser resource audit found no Google Analytics, Tag Manager, AdSense, DoubleClick, or related tracking/ad requests. Tool inputs remain browser-local unless a tool explicitly requires a documented backend network lookup; no analytics pipeline receives those inputs.
