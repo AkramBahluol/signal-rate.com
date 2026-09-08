@@ -18,3 +18,9 @@ button, input, select, textarea, a { outline-offset: 3px; }
 .skip-link:focus { top: 1rem; }
 .shell { width: min(1160px, calc(100% - 2rem)); margin: 0 auto; }
 .grid-bg { background-image: linear-gradient(#315efb0d 1px, transparent 1px), linear-gradient(90deg, #315efb0d 1px, transparent 1px); background-size: 32px 32px; }
+@layer components {
+  .button-primary { @apply rounded-xl bg-[#315efb] px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60; }
+  .button-secondary { @apply rounded-xl border border-slate-300 bg-white px-5 py-3 font-semibold text-slate-800; }
+  .result-card { @apply rounded-xl border border-blue-100 bg-blue-50 p-4 text-slate-900; }
+  table th, table td { @apply border-b border-slate-200 px-2 py-2 text-end; }
+}

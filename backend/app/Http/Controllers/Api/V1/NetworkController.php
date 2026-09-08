@@ -146,6 +146,34 @@ final class NetworkController
         return $this->respond(fn () => $web->certificate($data['hostname']));
     }
 
+    public function availability(Request $request, WebDiagnosticsService $web): JsonResponse
+    {
+        $data = $request->validate(['target' => ['required', 'string', 'max:2048']]);
+
+        return $this->respond(fn () => $web->availability($data['target']));
+    }
+
+    public function certificateChain(Request $request, WebDiagnosticsService $web): JsonResponse
+    {
+        $data = $request->validate(['target' => ['required', 'string', 'max:253']]);
+
+        return $this->respond(fn () => $web->certificateChain($data['target']));
+    }
+
+    public function tlsVersions(Request $request, WebDiagnosticsService $web): JsonResponse
+    {
+        $data = $request->validate(['target' => ['required', 'string', 'max:253']]);
+
+        return $this->respond(fn () => $web->tlsVersions($data['target']));
+    }
+
+    public function httpsHealth(Request $request, WebDiagnosticsService $web): JsonResponse
+    {
+        $data = $request->validate(['target' => ['required', 'string', 'max:2048']]);
+
+        return $this->respond(fn () => $web->httpsHealth($data['target']));
+    }
+
     private function respond(callable $callback): JsonResponse
     {
         try {

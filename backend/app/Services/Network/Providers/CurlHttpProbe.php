@@ -29,13 +29,15 @@ final class CurlHttpProbe implements HttpProbe
 
             return strlen($line);
         }]);
+        $started = microtime(true);
         $ok = curl_exec($handle);
+        $responseTime = (int) round((microtime(true) - $started) * 1000);
         $error = curl_error($handle);
         curl_close($handle);
         if ($ok === false || $status === 0) {
             throw new InvalidArgumentException('HTTP request failed: '.($error ?: 'no response received.'));
         }
 
-        return compact('status', 'headers', 'location');
+        return ['status' => $status, 'headers' => $headers, 'location' => $location, 'response_time_ms' => $responseTime];
     }
 }

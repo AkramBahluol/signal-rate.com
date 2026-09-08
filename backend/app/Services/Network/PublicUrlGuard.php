@@ -22,6 +22,10 @@ final class PublicUrlGuard
         if (isset($parts['user']) || isset($parts['pass'])) {
             throw new InvalidArgumentException('URLs containing credentials are blocked.');
         }
+        $port = (int) ($parts['port'] ?? (($parts['scheme'] ?? '') === 'https' ? 443 : 80));
+        if (! in_array($port, [80, 443], true)) {
+            throw new InvalidArgumentException('Only standard HTTP and HTTPS ports are allowed for this check.');
+        }
         $host = $parts['host'] ?? '';
         if ($host === '') {
             throw new InvalidArgumentException('URL hostname is required.');
@@ -35,7 +39,7 @@ final class PublicUrlGuard
             throw new InvalidArgumentException('Hostname addresses changed during validation; the request was blocked.');
         }
 
-        return ['url' => $url, 'scheme' => strtolower($parts['scheme']), 'host' => $host, 'port' => (int) ($parts['port'] ?? (($parts['scheme'] ?? '') === 'https' ? 443 : 80)), 'ips' => $second];
+        return ['url' => $url, 'scheme' => strtolower($parts['scheme']), 'host' => $host, 'port' => $port, 'ips' => $second];
     }
 
     private function resolve(string $host): array

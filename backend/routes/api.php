@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\CarrierController;
 use App\Http\Controllers\Api\V1\DirectoryController;
 use App\Http\Controllers\Api\V1\E164Controller;
 use App\Http\Controllers\Api\V1\ErrorController;
+use App\Http\Controllers\Api\V1\ExchangeRateController;
 use App\Http\Controllers\Api\V1\MobilePlanController;
 use App\Http\Controllers\Api\V1\NetworkController;
 use App\Http\Controllers\Api\V1\SearchController;
@@ -15,6 +16,7 @@ Route::prefix('v1')->middleware('throttle:directory')->group(function (): void {
     Route::post('/gsm7/check', [SmsController::class, 'check']);
     Route::post('/sms/calculate', [SmsController::class, 'calculate']);
     Route::post('/e164/format', [E164Controller::class, 'format']);
+    Route::post('/exchange-rates/convert', [ExchangeRateController::class, 'convert']);
     Route::get('/countries', [DirectoryController::class, 'countries']);
     Route::get('/countries/{iso2}', [DirectoryController::class, 'country']);
     Route::get('/calling-codes/{code}', [DirectoryController::class, 'callingCode']);
@@ -59,4 +61,8 @@ Route::prefix('v1/network')->middleware('throttle:5,1')->group(function (): void
     Route::post('/redirect-check', [NetworkController::class, 'redirects']);
     Route::post('/http-headers', [NetworkController::class, 'headers']);
     Route::post('/ssl-certificate', [NetworkController::class, 'ssl']);
+    Route::post('/availability', [NetworkController::class, 'availability']);
+    Route::post('/certificate-chain', [NetworkController::class, 'certificateChain']);
+    Route::post('/tls-versions', [NetworkController::class, 'tlsVersions']);
+    Route::post('/https-health', [NetworkController::class, 'httpsHealth']);
 });

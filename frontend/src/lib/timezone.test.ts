@@ -1,0 +1,1 @@
+import{describe,expect,it}from"vitest";import{zonedWallTimeToUtc}from"./timezone";describe("timezone",()=>{it("uses IANA DST rules",()=>{expect(zonedWallTimeToUtc("2026-07-01T12:00","America/New_York").toISOString()).toBe("2026-07-01T16:00:00.000Z");expect(zonedWallTimeToUtc("2026-01-01T12:00","America/New_York").toISOString()).toBe("2026-01-01T17:00:00.000Z")})});

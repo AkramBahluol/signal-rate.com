@@ -143,6 +143,10 @@ final class NetworkApiTest extends TestCase
         $this->postJson('/api/v1/network/http-headers', ['url' => 'http://169.254.169.254/latest/meta-data'])->assertUnprocessable();
         $this->postJson('/api/v1/network/redirect-check', ['url' => 'file:///etc/passwd'])->assertUnprocessable();
         $this->postJson('/api/v1/network/ssl-certificate', ['hostname' => 'localhost'])->assertUnprocessable();
+        $this->postJson('/api/v1/network/availability', ['target' => 'http://127.0.0.1/'])->assertUnprocessable();
+        $this->postJson('/api/v1/network/https-health', ['target' => 'http://169.254.169.254/'])->assertUnprocessable();
+        $this->postJson('/api/v1/network/tls-versions', ['target' => 'localhost'])->assertUnprocessable();
+        $this->postJson('/api/v1/network/availability', ['target' => 'https://example.com:8443/'])->assertUnprocessable();
     }
 
     public function test_redirect_headers_limit_and_timeout_use_deterministic_probes(): void

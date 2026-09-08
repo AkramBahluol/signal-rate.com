@@ -5,6 +5,8 @@ import {developerToolPath,developerTools} from "@/lib/developer-tools";
 import {isIndexableTelecom} from "@/lib/telecom-utils";
 import {networkTools} from "@/lib/network-tools";
 import {siteUrl} from "@/lib/site";
+import {growthTools} from "@/lib/growth-tools";
+import {alternates,locales} from "@/lib/i18n";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const paths = [
@@ -16,7 +18,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/tools/e164-phone-formatter", "/tools/mcc-mnc-lookup", "/countries", "/calling-codes", "/mcc", "/carriers", "/errors", "/about", "/contact", "/privacy", "/terms", "/methodology", "/data-policy",
   ];
   paths.push("/developer-tools",...developerTools.map(tool=>developerToolPath(tool.slug)),"/network/email-security",...networkTools.map(tool=>tool.path));
-  const base = [...new Set(paths)].map(path => ({ url: `${siteUrl}${path}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: path === "" ? 1 : 0.8 }));
+  paths.push(...growthTools.map(tool=>tool.path));
+  const base = [...new Set(paths)].map(path => ({ url: `${siteUrl}${path}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: path === "" ? 1 : 0.8, ...(growthTools.some(t=>t.path===path)?{alternates:{languages:alternates(path)}}:{}) }));
+  const localized=growthTools.flatMap(tool=>locales.map(locale=>({url:`${siteUrl}/${locale.url}${tool.path}`,lastModified:new Date(),changeFrequency:"weekly" as const,priority:.7,alternates:{languages:alternates(tool.path)}})));
   const dynamicEntries:MetadataRoute.Sitemap=[];
   try {
     const {data}=await apiGet<MobilePlanResponse>("/mobile-plans/country/GB?per_page=50");
@@ -44,5 +48,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const verifiedCarriers=carriers.data.filter(operator=>isIndexableTelecom(operator,Boolean(operator.network_assignments?.length)));
     dynamicEntries.push(...[...new Map(verifiedCarriers.map(operator=>[operator.country.slug,operator.country])).values()].map(country=>({url:`${siteUrl}/carriers/${country.slug}`,lastModified:new Date(),changeFrequency:"monthly" as const,priority:0.65})),...verifiedCarriers.map(operator=>({url:`${siteUrl}/carriers/${operator.country.slug}/${operator.slug}`,lastModified:new Date(operator.last_verified_at??Date.now()),changeFrequency:"monthly" as const,priority:0.65})));
   }catch{/* Quality-gated telecom pages are omitted if the directory API is unavailable. */}
-  return[...new Map([...base,...dynamicEntries].map(entry=>[entry.url,entry])).values()];
+  return[...new Map([...base,...localized,...dynamicEntries].map(entry=>[entry.url,entry])).values()];
 }
