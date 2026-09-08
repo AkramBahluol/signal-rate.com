@@ -468,32 +468,27 @@ function Compound({ c, locale }: { c: Copy; locale?: string }) {
   );
 }
 function Unit({ c, locale }: { c: Copy; locale?: string }) {
-  const [cat, setCat] = useState<
-      "length" | "mass" | "speed" | "data" | "temperature"
-    >("length"),
+  const unitChoices = {
+    length: ["m", "km", "mi", "ft"],
+    area: ["m²", "km²", "ft²", "acre"],
+    volume: ["L", "mL", "m³", "gal (US)"],
+    mass: ["kg", "lb"],
+    temperature: ["C", "F", "K"],
+    speed: ["m/s", "km/h", "mph", "Mbps", "MB/s"],
+    time: ["s", "min", "h", "day"],
+    data: ["B", "KB", "MB", "GB", "KiB", "MiB", "GiB"],
+    energy: ["J", "kJ", "Wh", "kWh"],
+    power: ["W", "kW", "hp"],
+    pressure: ["Pa", "kPa", "bar", "psi"],
+  } as const;
+  const [cat, setCat] = useState<keyof typeof unitChoices>("length"),
     [value, setValue] = useState(1),
     [from, setFrom] = useState("km"),
     [to, setTo] = useState("mi");
-  const opts = Object.keys(
-    {
-      length: { m: 0, km: 0, mi: 0, ft: 0 },
-      mass: { kg: 0, lb: 0 },
-      speed: { "m/s": 0, "km/h": 0, mph: 0, Mbps: 0, "MB/s": 0 },
-      data: { B: 0, KB: 0, MB: 0, GB: 0, KiB: 0, MiB: 0, GiB: 0 },
-      temperature: { C: 0, F: 0, K: 0 },
-    }[cat],
-  );
+  const opts = [...unitChoices[cat]];
   const change = (v: typeof cat) => {
     setCat(v);
-    const o = Object.keys(
-      {
-        length: { m: 0, km: 0, mi: 0, ft: 0 },
-        mass: { kg: 0, lb: 0 },
-        speed: { "m/s": 0, "km/h": 0, mph: 0, Mbps: 0, "MB/s": 0 },
-        data: { B: 0, KB: 0, MB: 0, GB: 0, KiB: 0, MiB: 0, GiB: 0 },
-        temperature: { C: 0, F: 0, K: 0 },
-      }[v],
-    );
+    const o = [...unitChoices[v]];
     setFrom(o[0]);
     setTo(o[1]);
   };
@@ -507,7 +502,7 @@ function Unit({ c, locale }: { c: Copy; locale?: string }) {
             value={cat}
             onChange={(e) => change(e.target.value as typeof cat)}
           >
-            {["length", "mass", "speed", "data", "temperature"].map((v) => (
+            {Object.keys(unitChoices).map((v) => (
               <option key={v}>{v}</option>
             ))}
           </select>
