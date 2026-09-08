@@ -102,6 +102,14 @@
 - No SQL/code execution, private-key processing, mail sending, bulk scanning, tracking QR, AdSense, affiliate, account, or paid-API functionality was introduced.
 
 ## Validation
+- Milestone 9 final validation (2026-09-08): local and production Compose configurations are valid. All four local containers are running healthy; frontend and backend return HTTP 200, PostgreSQL/Redis are healthy, and Redis remains internal-only with no published host binding.
+- Laravel reports no pending migrations and passes 87 tests / 380 assertions. Pint passes across 138 files and Composer strict validation passes.
+- Vitest passes 35 tests across five files, including disabled/malformed/configured ads.txt behavior. ESLint passes with zero warnings/errors. The Next.js 16 production build compiles, type-checks, and emits 66 static/dynamic route entries.
+- The final local crawl audits 439 public routes: 433 canonical indexable sitemap routes and six intentional noindex routes. It finds zero broken internal links, zero unexpected redirects, zero indexable thin-page flags, and both missing-route/entity probes return 404.
+- Live global-search checks pass for telecom, network, developer, error, country, MCC/MNC, carrier, and mobile-plan terms. Robots, sitemap, legal pages, security headers, disabled ads.txt, and safe 404 behavior return the expected statuses.
+- A 379 px browser audit covers the homepage and representative telecom tool, error, country, MCC, carrier, network, developer, and mobile-plan templates. No page-level horizontal overflow or unlabelled form control was observed; the mobile header contrast regression found during audit was fixed.
+- Production frontend/backend images build successfully under distinct names. The standalone Next container returns HTTP 200, and non-root PHP-FPM starts ready with cURL, PostgreSQL PDO, and Redis enabled. The optimized Docker context is under 1 MB for the frontend instead of the previously observed 550+ MB.
+
 - Milestone 8 final validation (2026-09-08): Compose configuration is valid; migrations report nothing pending; frontend/backend are running and PostgreSQL/Redis are healthy. Redis remains internal-only on `6379/tcp`.
 - Laravel passes 87 tests and 380 assertions, including SPF/DKIM/DMARC parsing, selector validation, private/metadata/protocol rejection, redirect behavior and limit, header fixtures, timeout normalization, and DNS-rebinding prevention. Pint passes across 137 files and Composer strict validation passes.
 - Vitest passes 32 tests covering regex success/failure, deterministic cron preview, SQL, safe YAML, all three structured-data converters, User-Agent parsing, QR payloads, units, and download estimates. ESLint passes with zero warnings. The Next.js 16 production build compiles, type-checks, and prerenders all required Milestone 8 routes.
@@ -150,6 +158,18 @@
 - Live API smoke tests passed for SMS, E.164, countries, calling codes, and search. CORS returned `Access-Control-Allow-Origin: http://localhost:3000`.
 - Live page checks returned HTTP 200 for all four SMS tools, E.164, MCC/MNC lookup, countries, `/countries/us`, calling codes, `/calling-codes/44`, carriers, and global search.
 - Docker Compose config is valid; frontend/backend are running and PostgreSQL/Redis are healthy. Redis remains internal-only.
+
+## Milestone 9 launch and AdSense readiness
+
+- Added a reproducible full-site inventory and internal-link/status crawler. The final local audit covers 439 public routes: 433 indexable/sitemap URLs and six intentional noindex routes, with zero broken internal links, zero unexpected redirects, zero indexable thin-page flags, complete canonical/meta coverage, and explicit 404 probes.
+- Rebuilt the homepage as a product landing page, simplified primary navigation, grouped footer discovery, and added About, Contact, Privacy, Terms, and Methodology trust pages. The contact address is environment-configured and no insecure mail relay or form was introduced.
+- Completed content, index/noindex, canonical, structured-data, search-intent/cannibalization, internal-linking, placeholder, brand, and future-ad-quality audits. Empty mobile-plan pages remain useful to visitors but are noindex and excluded from the sitemap until approved verified data exists.
+- Added a polished searchable 404, safe application error boundary, skip link, focus-visible behavior, and a mobile visual audit across major templates. Fixed a global anchor-color override; 379 px checks found no page-level horizontal overflow or unlabelled form controls in the reviewed templates.
+- Added disabled-by-default `AdSlot` and analytics abstractions, safe `/ads.txt` behavior, environment examples, and consent/AdSense documentation. No live ad/analytics script, publisher ID, personalized advertising, affiliate link, or unnecessary consent banner is present.
+- Added production security headers with environment-aware development allowances, standalone/non-root Next.js and PHP-FPM images, an internal-only data tier, bounded Redis memory, Nginx apex/www and same-origin API routing, and health checks for frontend/backend/Nginx/PostgreSQL/Redis.
+- Added a root Docker build ignore file and distinct production image names. Validated production images directly: standalone Next returned HTTP 200 and non-root PHP-FPM started ready with cURL, PostgreSQL PDO, and Redis extensions.
+- Added deployment, Cloudflare/trusted-proxy, firewall, backup/restore, migration/import, logging/retention, monitoring, rollback, launch, Search Console, CMP, and AdSense activation runbooks. Production remains `APP_DEBUG=false`, rate-limited, and secret-free in source control.
+- Heavy QR/YAML/XML/CSV/SQL dependencies remain dynamically imported only by the relevant tools. No synthetic Core Web Vitals scores are claimed; production field monitoring is a launch checklist item.
 
 ## Current architecture
 - `frontend/src/lib/sms.ts` is the single browser-side SMS calculation module; all four SMS pages use `SmsTool`.

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import {siteUrl} from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://signalrate.com"),
+  metadataBase: new URL(siteUrl),
   title: { default: "SignalRate | Compare. Connect. Build.", template: "%s | SignalRate" },
   description: "Practical telecom, developer, and network tools built for accurate answers.",
   alternates: { canonical: "/" },
@@ -22,13 +23,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
-  const websiteSchema = { "@context": "https://schema.org", "@type": "WebSite", name: "SignalRate", url: "https://signalrate.com", potentialAction: { "@type": "SearchAction", target: "https://signalrate.com/search?q={search_term_string}", "query-input": "required name=search_term_string" } };
+  const websiteSchema = { "@context": "https://schema.org", "@type": "WebSite", name: "SignalRate", url: siteUrl, potentialAction: { "@type": "SearchAction", target: `${siteUrl}/search?q={search_term_string}`, "query-input": "required name=search_term_string" } };
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} /></body>
+      <body className="min-h-full flex flex-col"><a href="#site-content" className="skip-link">Skip to main content</a><div id="site-content" className="contents">{children}</div><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} /></body>
     </html>
   );
 }

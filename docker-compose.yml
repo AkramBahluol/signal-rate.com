@@ -15,6 +15,11 @@ services:
       API_INTERNAL_URL: http://backend:8000
     depends_on:
       - backend
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/ >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   backend:
     build:
@@ -45,6 +50,7 @@ services:
       NETWORK_TRUSTED_PROXIES: ${NETWORK_TRUSTED_PROXIES:-}
       NETWORK_PROVIDER_TIMEOUT: ${NETWORK_PROVIDER_TIMEOUT:-5}
       NETWORK_SOCKET_TIMEOUT: ${NETWORK_SOCKET_TIMEOUT:-3}
+      DIRECTORY_RATE_LIMIT_PER_MINUTE: ${DIRECTORY_RATE_LIMIT_PER_MINUTE:-2000}
       CACHE_STORE: redis
       QUEUE_CONNECTION: redis
     depends_on:
@@ -52,6 +58,11 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8000/up >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   postgres:
     image: postgres:17-alpine

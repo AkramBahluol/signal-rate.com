@@ -1,0 +1,15 @@
+FROM php:8.4-fpm-alpine
+RUN apk add --no-cache libpq \
+    && apk add --no-cache --virtual .build-deps libpq-dev linux-headers $PHPIZE_DEPS \
+    && docker-php-ext-install pdo_pgsql \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del .build-deps
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+WORKDIR /var/www
+COPY backend/composer.* ./
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+COPY backend/ ./
+RUN composer dump-autoload --no-dev --classmap-authoritative && chown -R www-data:www-data storage bootstrap/cache
+USER www-data
+CMD ["php-fpm","-F"]

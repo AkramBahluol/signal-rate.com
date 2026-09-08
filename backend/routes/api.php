@@ -11,7 +11,9 @@ use App\Http\Controllers\Api\V1\SmsController;
 use App\Http\Controllers\Api\V1\TelecomSearchController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1')->middleware('throttle:60,1')->group(function (): void {
+$directoryRateLimit = max(1, (int) config('signalrate.directory_rate_limit', 60));
+
+Route::prefix('v1')->middleware("throttle:{$directoryRateLimit},1")->group(function (): void {
     Route::post('/gsm7/check', [SmsController::class, 'check']);
     Route::post('/sms/calculate', [SmsController::class, 'calculate']);
     Route::post('/e164/format', [E164Controller::class, 'format']);
