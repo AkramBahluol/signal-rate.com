@@ -36,9 +36,13 @@ for service in postgres redis; do
 done
 
 SIGNALRATE_ENV_FILE="$environment_file" scripts/backup-postgres.sh
-"${compose[@]}" run --rm backend php artisan migrate --force
-"${compose[@]}" run --rm backend php artisan telecom:sync
-"${compose[@]}" run --rm backend php artisan errors:import
+project_name="$("${compose[@]}" config --format json | sed -n 's/^  "name": "\([^"]*\)",$/\1/p' | head -n 1)"
+[[ -n "$project_name" ]] || { echo "Unable to resolve the Compose project name." >&2; exit 1; }
+backend_image="signalrate/backend-production:$SIGNALRATE_RELEASE"
+backend_cli=(docker run --rm --network "${project_name}_data" --env-file "$environment_file" --security-opt no-new-privileges:true --pids-limit 200 --memory 768m --cpus 0.75 "$backend_image")
+"${backend_cli[@]}" php artisan migrate --force
+"${backend_cli[@]}" php artisan telecom:sync
+"${backend_cli[@]}" php artisan errors:import
 "${compose[@]}" up -d --remove-orphans
 
 for service in frontend backend nginx postgres redis; do
