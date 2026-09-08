@@ -35,4 +35,6 @@ fi
 
 logrotate --debug /etc/logrotate.d/signalrate >/dev/null
 systemctl start signalrate-health.service
-systemctl --no-pager --full status signalrate-health.service
+systemctl show signalrate-health.service --property=Result --property=ExecMainStatus --no-pager
+[[ "$(systemctl show signalrate-health.service --property=Result --value)" == success ]] \
+    || { journalctl -u signalrate-health.service --since '10 minutes ago' --no-pager; exit 1; }

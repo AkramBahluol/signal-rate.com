@@ -199,7 +199,9 @@
 - Added host-Nginx log rotation and documented the existing 14-day Laravel plus bounded Docker retention. No AdSense or analytics behavior changed.
 - Added a reproducible Search Console readiness check and indexing baseline. Production robots, 434 unique canonical sitemap URLs, representative canonicals/indexability, and the external crawl pass. Search-engine discovery queries currently return no results and no Google verification TXT record exists; no indexing or performance data is fabricated.
 - A Codex external heartbeat checks public uptime, canonical redirects, representative API/robots/sitemap behavior, and TLS expiry every ten minutes, notifying only on a failure, warning, or recovery.
-- Production installation and a real encrypted off-server destination remain to be completed and validated before Milestone 11 can be marked complete.
+- Installed restic `0.16.4`, systemd units, protected operations configuration, and Nginx log rotation on production. The five-minute health timer passes; a synthetic log test proved new-5xx detection. A temporary restic repository test completed dump/checksum/archive validation, encrypted backup, 100% repository read, isolated restore, and 345-entry archive inspection before all test secrets/data were removed.
+- Browser resource inspection found no analytics, Tag Manager, AdSense, DoubleClick, or related tracking/ad requests. The existing product and advertising state is unchanged.
+- A real operator-owned restic repository remains the only infrastructure input required to enable and validate off-server backup timers. Google Search Console Domain verification and sitemap submission remain owner-side measurement tasks; readiness is already verified and no index data is fabricated.
 
 ## Known data state
 - The bundled source-reviewed dataset contains 248 UN M49 countries/areas, 241 E.164 calling-code relationships, 27 BNetzA German MCC/MNC assignments, and three explicitly matched German public operator entities. No assignment or carrier capability was invented.

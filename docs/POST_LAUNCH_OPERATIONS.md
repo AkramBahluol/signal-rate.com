@@ -2,6 +2,14 @@
 
 This runbook defines the Milestone 11 operations baseline for `https://signal-rate.com`. It does not enable product features, AdSense, or analytics.
 
+## Deployment status
+
+The production host has restic `0.16.4`, the SignalRate systemd units, protected operations configuration, and host-Nginx log rotation installed. `signalrate-health.timer` is enabled and its live check passes with all five containers healthy, 19% disk use, and approximately 78% memory available at the validation point. The synthetic 5xx test detected exactly one newly appended error after establishing its baseline.
+
+The backup workflow was exercised end to end against a temporary restic repository with 100% data-pack verification. It created a live custom-format dump, validated its checksum and 345 archive entries, encrypted it into restic, restored it to an isolated temporary directory, and revalidated the checksum/archive. The temporary repository and password were then removed. This proves the workflow but is not an off-server copy; the production backup timers remain disabled until an operator-owned remote repository is supplied.
+
+The active Codex heartbeat `SignalRate production monitor` checks the public edge and, when SSH is available, the host health state every ten minutes. It remains silent while healthy and notifies on failure, warning, or recovery. No server webhook is currently configured.
+
 ## Installed checks
 
 `signalrate-health.timer` runs every five minutes and validates:
@@ -60,3 +68,5 @@ Review disk usage monthly with `df -h /`, `docker system df`, database size, and
 Run `node scripts/verify-search-readiness.mjs` after releases that affect routing, metadata, robots, or the sitemap. The check validates the public robots file, sitemap origin/uniqueness, and representative canonical/indexable templates.
 
 Google Search Console still requires a domain-owner action: add the Domain property, publish the exact Google-provided DNS TXT token, and submit `https://signal-rate.com/sitemap.xml`. Do not invent verification records or request indexing for intentional noindex/empty pages.
+
+The production browser resource audit found no Google Analytics, Tag Manager, AdSense, DoubleClick, or related tracking/ad requests. Tool inputs remain browser-local unless a tool explicitly requires a documented backend network lookup; no analytics pipeline receives those inputs.
