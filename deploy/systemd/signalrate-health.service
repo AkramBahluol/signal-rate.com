@@ -2,7 +2,7 @@
 Description=SignalRate production health and resource check
 After=docker.service network-online.target
 Wants=network-online.target
-OnFailure=signalrate-alert@%n.service
+OnFailure=signalrate-alert@health.service
 
 [Service]
 Type=oneshot

@@ -6,15 +6,15 @@ This runbook defines the Milestone 11 operations baseline for `https://signal-ra
 
 `signalrate-health.timer` runs every five minutes and validates:
 
-- public canonical HTTPS returns 200;
-- the sitemap is reachable, canonical, and contains no local origins;
-- the public TLS certificate has more than 21 days remaining;
+- the loopback production origin returns 200 with the canonical host;
+- the origin sitemap is reachable, canonical, and contains no local origins;
+- the installed Origin CA certificate has more than 21 days remaining;
 - frontend, backend, Nginx, PostgreSQL, and Redis containers are present, healthy, and have not restarted unexpectedly;
 - root disk usage stays below 80%;
 - available host memory stays at or above 15%;
 - newly observed host-Nginx 5xx responses stay below the alert threshold.
 
-Failures are recorded in the systemd journal and trigger `signalrate-alert@.service`. If `SIGNALRATE_ALERT_WEBHOOK_URL` is configured in the protected operations environment, a generic alert is sent without request content, URLs containing user inputs, IP addresses, credentials, or application payloads. The Codex external heartbeat independently checks the public service and production state and notifies only on failures or recovery.
+Failures are recorded in the systemd journal and trigger `signalrate-alert@.service`. If `SIGNALRATE_ALERT_WEBHOOK_URL` is configured in the protected operations environment, a generic alert is sent without request content, URLs containing user inputs, IP addresses, credentials, or application payloads. The Codex external heartbeat independently checks the public Cloudflare path and public TLS from outside the server and notifies only on failures or recovery. Separating origin and edge checks avoids false failures when a server cannot hairpin through its own proxy.
 
 Inspect the local monitor with:
 

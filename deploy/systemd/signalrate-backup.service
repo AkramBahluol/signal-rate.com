@@ -2,7 +2,7 @@
 Description=Create and upload an encrypted SignalRate PostgreSQL backup
 After=docker.service network-online.target
 Wants=network-online.target
-OnFailure=signalrate-alert@%n.service
+OnFailure=signalrate-alert@backup.service
 
 [Service]
 Type=oneshot

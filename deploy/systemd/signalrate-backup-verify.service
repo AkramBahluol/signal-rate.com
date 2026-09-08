@@ -2,7 +2,7 @@
 Description=Restore and verify the latest encrypted SignalRate backup
 After=docker.service network-online.target
 Wants=network-online.target
-OnFailure=signalrate-alert@%n.service
+OnFailure=signalrate-alert@backup-verify.service
 
 [Service]
 Type=oneshot

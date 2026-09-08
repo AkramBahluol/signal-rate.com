@@ -9,7 +9,9 @@ configuration_file="${SIGNALRATE_OPERATIONS_ENV:-/etc/signalrate/operations.env}
 
 environment_file="${SIGNALRATE_ENV_FILE:-.env.production}"
 state_directory="${SIGNALRATE_OPERATIONS_STATE_DIR:-/var/lib/signalrate-operations}"
-public_origin="${SIGNALRATE_PUBLIC_ORIGIN:-https://signal-rate.com}"
+local_origin="${SIGNALRATE_LOCAL_ORIGIN:-http://127.0.0.1:8080}"
+origin_host="${SIGNALRATE_ORIGIN_HOST:-signal-rate.com}"
+origin_certificate="${SIGNALRATE_ORIGIN_CERTIFICATE:-/etc/ssl/signalrate/origin.pem}"
 disk_warning_percent="${SIGNALRATE_DISK_WARNING_PERCENT:-80}"
 memory_warning_percent="${SIGNALRATE_MEMORY_WARNING_PERCENT:-15}"
 certificate_warning_days="${SIGNALRATE_CERTIFICATE_WARNING_DAYS:-21}"
@@ -38,20 +40,18 @@ for service in frontend backend nginx postgres redis; do
     (( restart_count == 0 )) || failures+=("${service}-restarts-${restart_count}")
 done
 
-http_status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 "$public_origin/")" || http_status=000
-[[ "$http_status" == 200 ]] || failures+=("public-http-${http_status}")
+http_status="$(curl --silent --show-error --header "Host: $origin_host" --output /dev/null --write-out '%{http_code}' --max-time 20 "$local_origin/")" || http_status=000
+[[ "$http_status" == 200 ]] || failures+=("origin-http-${http_status}")
 
-sitemap_status="$(curl --silent --show-error --output /tmp/signalrate-sitemap.xml --write-out '%{http_code}' --max-time 20 "$public_origin/sitemap.xml")" || sitemap_status=000
+sitemap_status="$(curl --silent --show-error --header "Host: $origin_host" --output /tmp/signalrate-sitemap.xml --write-out '%{http_code}' --max-time 20 "$local_origin/sitemap.xml")" || sitemap_status=000
 if [[ "$sitemap_status" != 200 ]] || ! grep -q '<loc>https://signal-rate.com/' /tmp/signalrate-sitemap.xml || grep -Eqi 'localhost|127\.0\.0\.1' /tmp/signalrate-sitemap.xml; then
     failures+=("sitemap-invalid")
 fi
 
-certificate_file="$(mktemp /tmp/signalrate-certificate.XXXXXX.pem)"
-trap 'rm -f /tmp/signalrate-sitemap.xml "$certificate_file"' EXIT
-if ! openssl s_client -connect signal-rate.com:443 -servername signal-rate.com </dev/null 2>/dev/null \
-    | openssl x509 -outform PEM > "$certificate_file"; then
+trap 'rm -f /tmp/signalrate-sitemap.xml' EXIT
+if [[ ! -r "$origin_certificate" ]]; then
     failures+=("certificate-unavailable")
-elif ! openssl x509 -checkend "$((certificate_warning_days * 86400))" -noout -in "$certificate_file" >/dev/null; then
+elif ! openssl x509 -checkend "$((certificate_warning_days * 86400))" -noout -in "$origin_certificate" >/dev/null; then
     failures+=("certificate-expiry")
 fi
 
@@ -89,4 +89,4 @@ if (( ${#failures[@]} )); then
     exit 1
 fi
 
-echo "SignalRate operations health passed: HTTP 200, services healthy, disk ${disk_used_percent}% used, memory ${memory_available_percent}% available."
+echo "SignalRate operations health passed: origin HTTP 200, services healthy, disk ${disk_used_percent}% used, memory ${memory_available_percent}% available."
