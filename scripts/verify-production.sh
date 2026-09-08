@@ -20,8 +20,10 @@ for path in / /about /contact /privacy /terms /data-policy /robots.txt /sitemap.
     check_200 "$path"
 done
 
-ads_status="$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 20 "$origin/ads.txt")"
-[[ "$ads_status" == 404 ]] || { echo "ads.txt must return 404 while advertising is disabled; received $ads_status." >&2; exit 1; }
+expected_ads_line="${SIGNALRATE_EXPECTED_ADS_TXT_LINE:-google.com, pub-9743834422526607, DIRECT, f08c47fec0942fa0}"
+ads_status="$(curl --silent --show-error --output /tmp/signalrate-ads-txt --write-out '%{http_code}' --max-time 20 "$origin/ads.txt")"
+[[ "$ads_status" == 200 ]] || { echo "ads.txt returned $ads_status." >&2; exit 1; }
+[[ "$(tr -d '\r\n' </tmp/signalrate-ads-txt)" == "$expected_ads_line" ]] || { echo "ads.txt does not match the reviewed seller declaration." >&2; exit 1; }
 
 http_location="$(curl --silent --output /dev/null --write-out '%{redirect_url}' --max-time 20 http://signal-rate.com/)"
 www_location="$(curl --silent --output /dev/null --write-out '%{redirect_url}' --max-time 20 https://www.signal-rate.com/)"
