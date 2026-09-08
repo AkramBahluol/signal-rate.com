@@ -192,6 +192,15 @@
 - Configured the real public address `contact@signal-rate.com` in the protected production environment and rebuilt the frontend. Contact, Privacy, Terms, and Data Policy use only that public address; no private forwarding destination is exposed. Cloudflare email obfuscation remains enabled and its infrastructure paths are excluded from internal-link auditing.
 - Final validation: Laravel 88 tests/384 assertions, Pint 139 files, Composer strict validation, frontend 35 tests, ESLint, TypeScript, the 67-entry Next.js production build, production health, public smoke checks, canonical redirects, and the 440-route public crawl all pass. The existing local Milestone 9 Compose environment remains healthy. Encrypted off-host backups and monitoring remain operational follow-up; see `PRODUCTION_LAUNCH_REPORT.md`.
 
+## Milestone 11 post-launch operations (in progress)
+
+- Added a five-minute production health check for public uptime, sitemap integrity, TLS expiry, Docker health/restarts, disk, available memory, and newly observed host-Nginx 5xx responses. Failures enter the systemd journal and an optional generic webhook without tool inputs, request payloads, secrets, or private forwarding data.
+- Added daily encrypted restic backup and weekly restore-verification units. The workflow validates the PostgreSQL dump/checksum/archive before upload and restores the latest encrypted snapshot to an isolated temporary path for checksum and archive inspection; it never restores into production.
+- Added host-Nginx log rotation and documented the existing 14-day Laravel plus bounded Docker retention. No AdSense or analytics behavior changed.
+- Added a reproducible Search Console readiness check and indexing baseline. Production robots, 434 unique canonical sitemap URLs, representative canonicals/indexability, and the external crawl pass. Search-engine discovery queries currently return no results and no Google verification TXT record exists; no indexing or performance data is fabricated.
+- A Codex external heartbeat checks public uptime, canonical redirects, representative API/robots/sitemap behavior, and TLS expiry every ten minutes, notifying only on a failure, warning, or recovery.
+- Production installation and a real encrypted off-server destination remain to be completed and validated before Milestone 11 can be marked complete.
+
 ## Known data state
 - The bundled source-reviewed dataset contains 248 UN M49 countries/areas, 241 E.164 calling-code relationships, 27 BNetzA German MCC/MNC assignments, and three explicitly matched German public operator entities. No assignment or carrier capability was invented.
 - Global MCC/MNC coverage intentionally remains regulator-by-regulator rather than copying an unlicensed secondary directory or redistributing ITU operational-bulletin data without confirmed reuse rights. Markets without a reviewed permitted source retain honest empty states.

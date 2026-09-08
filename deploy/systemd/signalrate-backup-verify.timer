@@ -1,0 +1,10 @@
+[Unit]
+Description=Weekly SignalRate off-server restore verification
+
+[Timer]
+OnCalendar=Sun *-*-* 04:15:00 UTC
+RandomizedDelaySec=30min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=Create and upload an encrypted SignalRate PostgreSQL backup
+After=docker.service network-online.target
+Wants=network-online.target
+OnFailure=signalrate-alert@%n.service
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/signalrate
+ExecStart=/opt/signalrate/scripts/backup-offsite.sh
+Nice=15
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7

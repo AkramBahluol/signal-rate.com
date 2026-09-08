@@ -1,0 +1,12 @@
+[Unit]
+Description=SignalRate production health and resource check
+After=docker.service network-online.target
+Wants=network-online.target
+OnFailure=signalrate-alert@%n.service
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/signalrate
+ExecStart=/opt/signalrate/scripts/operations-health.sh
+Nice=10

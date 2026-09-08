@@ -1,0 +1,14 @@
+/var/log/nginx/signalrate-access.log {
+    daily
+    rotate 14
+    maxsize 25M
+    missingok
+    notifempty
+    compress
+    delaycompress
+    create 0640 www-data adm
+    sharedscripts
+    postrotate
+        systemctl reload nginx >/dev/null 2>&1 || true
+    endscript
+}
