@@ -47,6 +47,6 @@ The loopback origin and public Cloudflare path returned the expected responses. 
 
 ## Remaining operational follow-up
 
-Configure encrypted off-server backups and uptime, certificate-expiry, and disk monitoring, and identify a disposable restore-test destination. This does not change the completed public launch result, but remains required ongoing production operations work.
+Milestone 11 added uptime, certificate-expiry, disk, memory, Docker, origin, public-edge, and 5xx monitoring plus log retention and tested restore-verification infrastructure. Off-server encrypted backups are deferred by operator decision and are not a launch or Milestone 11 blocker; the remote restic timers remain installed but safely disabled without a repository.
 
-AdSense and analytics remain disabled. Search Console verification remains a domain-owner action; no verification token has been invented.
+AdSense and analytics remain disabled. The Search Console Domain property is verified through DNS TXT, and the submitted sitemap reports status **Success** with 434 discovered pages. The indexing report is still processing, so no index or performance totals are claimed.

@@ -31,7 +31,7 @@
 
 ## Discovery and later monetization
 
-- [ ] Add Search Console Domain property and submit the sitemap using `SEARCH_CONSOLE_SETUP.md`.
+- [x] Add the Search Console Domain property through DNS TXT and submit the sitemap using `SEARCH_CONSOLE_SETUP.md`; current sitemap status is **Success** with 434 discovered pages.
 - [ ] Review Privacy/Terms with qualified counsel for the actual launch regions.
 - [ ] Enable privacy-reviewed analytics only if needed, without tool inputs or lookup targets.
 - [ ] Consider AdSense only after the content/site review in `ADSENSE_READINESS.md`; use a certified CMP where required and a real environment-supplied ads.txt record.

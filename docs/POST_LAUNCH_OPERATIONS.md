@@ -81,6 +81,8 @@ Review disk usage monthly with `df -h /`, `docker system df`, database size, and
 
 Run `node scripts/verify-search-readiness.mjs` after releases that affect routing, metadata, robots, or the sitemap. The check validates the public robots file, sitemap origin/uniqueness, and representative canonical/indexable templates.
 
-Google Search Console still requires a domain-owner action: add the Domain property, publish the exact Google-provided DNS TXT token, and submit `https://signal-rate.com/sitemap.xml`. This external ownership action does not block completion of the technical milestone. Do not invent verification records or request indexing for intentional noindex/empty pages.
+The Google Search Console Domain property for `signal-rate.com` is verified through the domain name provider using DNS TXT. Keep the verification TXT record in DNS. `https://signal-rate.com/sitemap.xml` has been submitted successfully; Search Console reports status **Success** and 434 discovered pages.
+
+The indexing report is still processing, so no reliable indexed/not-indexed totals or performance metrics are available yet. Record those values only after Search Console supplies them; do not invent impressions, clicks, CTR, average position, indexed counts, Core Web Vitals field data, manual-action status, or security-issue status.
 
 The production browser resource audit found no Google Analytics, Tag Manager, AdSense, DoubleClick, or related tracking/ad requests. Tool inputs remain browser-local unless a tool explicitly requires a documented backend network lookup; no analytics pipeline receives those inputs.

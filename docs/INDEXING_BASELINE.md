@@ -16,15 +16,16 @@ Baseline date: 8 September 2026.
 
 Public web searches for `site:signal-rate.com`, `site:signal-rate.com/tools`, and `site:signal-rate.com/countries` returned no results on the baseline date. This is expected immediately after launch and is not an authoritative Google index count.
 
-No Google Search Console verification TXT record was detected. Therefore impressions, clicks, submitted-versus-indexed counts, exclusions, Core Web Vitals field data, manual actions, and security-issue status are not yet available. These values must not be guessed.
+The Google Search Console Domain property for `signal-rate.com` is verified through the domain name provider using a DNS TXT record. That verification TXT record must remain in DNS to preserve ownership verification.
 
-Search Console property verification and sitemap submission remain owner-side external actions. Technical search readiness is verified, so those account and DNS actions do not block Milestone 11 completion.
+`https://signal-rate.com/sitemap.xml` was submitted successfully. Search Console reports sitemap status **Success** and 434 discovered pages, matching the technical sitemap inventory.
 
-## Next operator measurement
+The indexing report is still processing and does not yet provide reliable indexed or not-indexed totals. Impressions, clicks, CTR, average position, indexed counts, Core Web Vitals field data, manual-action status, and security-issue status have not been recorded and must not be guessed.
 
-After the domain owner verifies the Search Console Domain property and submits the sitemap, record:
+## Next measurement
 
-- sitemap submitted/read dates and discovered URL count;
+After Search Console finishes processing and sufficient real data becomes available, record:
+
 - indexed and not-indexed counts with the major exclusion reasons;
 - impressions, clicks, CTR, and average position for the first 7- and 28-day windows;
 - Core Web Vitals field status by template when sufficient data exists;

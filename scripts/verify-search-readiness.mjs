@@ -1,4 +1,4 @@
-import { resolveTxt } from "node:dns/promises";
+import { Resolver, resolveTxt } from "node:dns/promises";
 
 const origin = (process.env.SIGNALRATE_PUBLIC_ORIGIN || "https://signal-rate.com").replace(/\/$/, "");
 const expectedHost = "signal-rate.com";
@@ -56,10 +56,22 @@ for (const path of samples) {
 
 let searchConsoleVerificationPresent = false;
 try {
-  const txtRecords = (await resolveTxt(expectedHost)).flat();
+  let txtRecords = (await resolveTxt(expectedHost)).flat();
+  if (!txtRecords.some(value => value.startsWith("google-site-verification="))) {
+    const publicResolver = new Resolver();
+    publicResolver.setServers(["1.1.1.1", "8.8.8.8"]);
+    txtRecords = (await publicResolver.resolveTxt(expectedHost)).flat();
+  }
   searchConsoleVerificationPresent = txtRecords.some(value => value.startsWith("google-site-verification="));
 } catch {
-  searchConsoleVerificationPresent = false;
+  try {
+    const publicResolver = new Resolver();
+    publicResolver.setServers(["1.1.1.1", "8.8.8.8"]);
+    const txtRecords = (await publicResolver.resolveTxt(expectedHost)).flat();
+    searchConsoleVerificationPresent = txtRecords.some(value => value.startsWith("google-site-verification="));
+  } catch {
+    searchConsoleVerificationPresent = false;
+  }
 }
 
 const report = {
