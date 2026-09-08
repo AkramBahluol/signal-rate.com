@@ -1,0 +1,2 @@
+import{NetworkToolPage}from"@/components/network/network-tool-page";import{networkMetadata}from"@/lib/network-metadata";
+export const metadata=networkMetadata("IP Blacklist Checker","Check a public IP against explicitly enabled, license-approved blacklist providers.","/network/ip-blacklist-check");export default function Page(){return <NetworkToolPage title="IP Blacklist Checker" description="Review checked, listed, not-listed and unavailable counts. No provider is queried unless its intended use and terms have been approved." mode="blacklist"/>}

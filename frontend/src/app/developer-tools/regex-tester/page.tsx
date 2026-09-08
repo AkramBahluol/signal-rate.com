@@ -1,0 +1,1 @@
+import{DeveloperToolPage,developerToolMetadata}from"@/components/developer/developer-tool-page";export const metadata=developerToolMetadata("regex-tester");export default function Page(){return <DeveloperToolPage slug="regex-tester"/>}

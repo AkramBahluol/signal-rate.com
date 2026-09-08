@@ -1,0 +1,2 @@
+import{NetworkToolPage}from"@/components/network/network-tool-page";import{networkMetadata}from"@/lib/network-metadata";
+export const metadata=networkMetadata("What Is My IP?","See the public IPv4 or IPv6 address observed by SignalRate with approximate, source-labelled network metadata.","/network/what-is-my-ip");export default function Page(){return <NetworkToolPage title="What Is My IP?" description="View the public address reaching SignalRate, its IP version, classification, reverse DNS, and any available approximate network metadata." mode="my-ip"/>}

@@ -1,0 +1,1 @@
+import{DeveloperToolPage,developerToolMetadata}from"@/components/developer/developer-tool-page";export const metadata=developerToolMetadata("data-unit-converter");export default function Page(){return <DeveloperToolPage slug="data-unit-converter"/>}

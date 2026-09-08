@@ -1,0 +1,2 @@
+import{NetworkToolPage}from"@/components/network/network-tool-page";import{networkMetadata}from"@/lib/network-metadata";
+export const metadata=networkMetadata("ASN Lookup","Normalize an autonomous system number and inspect verified organization and prefix data when configured.","/network/asn-lookup");export default function Page(){return <NetworkToolPage title="ASN Lookup" description="Enter AS15169 or 15169. SignalRate returns organization, country, network name and prefixes only when a configured provider supplies them." mode="asn"/>}

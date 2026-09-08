@@ -1,0 +1,1 @@
+import type {Metadata} from "next"; import {SmsToolPage} from "@/components/tool-page"; export const metadata:Metadata={title:"Unicode SMS Checker",description:"Find Unicode SMS characters and understand UCS-2 message limits.",alternates:{canonical:"/tools/unicode-sms-checker"}}; export default function Page(){return <SmsToolPage title="Unicode SMS Checker" mode="unicode"/>}

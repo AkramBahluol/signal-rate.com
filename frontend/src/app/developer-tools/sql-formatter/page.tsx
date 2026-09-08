@@ -1,0 +1,1 @@
+import{DeveloperToolPage,developerToolMetadata}from"@/components/developer/developer-tool-page";export const metadata=developerToolMetadata("sql-formatter");export default function Page(){return <DeveloperToolPage slug="sql-formatter"/>}

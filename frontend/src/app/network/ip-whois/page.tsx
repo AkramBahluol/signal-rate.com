@@ -1,0 +1,2 @@
+import{NetworkToolPage}from"@/components/network/network-tool-page";import{networkMetadata}from"@/lib/network-metadata";
+export const metadata=networkMetadata("IP WHOIS / RDAP Lookup","Query structured IP registration data through the official IANA RDAP bootstrap and responsible registry.","/network/ip-whois");export default function Page(){return <NetworkToolPage title="IP WHOIS / RDAP" description="Retrieve normalized network registration, range, entities, dates, remarks and contact details from the responsible Regional Internet Registry." mode="rdap"/>}

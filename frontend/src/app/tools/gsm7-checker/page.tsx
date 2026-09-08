@@ -1,0 +1,1 @@
+import type {Metadata} from "next"; import {SmsToolPage} from "@/components/tool-page"; export const metadata:Metadata={title:"GSM-7 Checker",description:"Check SMS text for GSM-7 compatibility and extension-table septets.",alternates:{canonical:"/tools/gsm7-checker"}}; export default function Page(){return <SmsToolPage title="GSM-7 Checker" mode="gsm"/>}

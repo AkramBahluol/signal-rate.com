@@ -1,0 +1,1 @@
+import{DeveloperToolPage,developerToolMetadata}from"@/components/developer/developer-tool-page";export const metadata=developerToolMetadata("json-yaml-converter");export default function Page(){return <DeveloperToolPage slug="json-yaml-converter"/>}

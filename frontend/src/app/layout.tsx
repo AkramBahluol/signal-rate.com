@@ -1,0 +1,34 @@
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://signalrate.com"),
+  title: { default: "SignalRate | Compare. Connect. Build.", template: "%s | SignalRate" },
+  description: "Practical telecom, developer, and network tools built for accurate answers.",
+  alternates: { canonical: "/" },
+  openGraph: { type: "website", siteName: "SignalRate", title: "SignalRate", description: "Compare. Connect. Build." },
+  twitter: { card: "summary_large_image" },
+};
+
+export default function RootLayout({ children }: LayoutProps<"/">) {
+  const websiteSchema = { "@context": "https://schema.org", "@type": "WebSite", name: "SignalRate", url: "https://signalrate.com", potentialAction: { "@type": "SearchAction", target: "https://signalrate.com/search?q={search_term_string}", "query-input": "required name=search_term_string" } };
+  return (
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col">{children}<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} /></body>
+    </html>
+  );
+}

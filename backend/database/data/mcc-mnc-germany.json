@@ -1,0 +1,43 @@
+{
+  "source": {
+    "key": "bnetza-de-imsi",
+    "name": "BNetzA assigned IMSI number blocks",
+    "authority": "Bundesnetzagentur (German Federal Network Agency)",
+    "url": "https://www.bundesnetzagentur.de/DE/Fachthemen/Telekommunikation/Nummerierung/IMSI/DL/imsi_zugbloecke.pdf?__blob=publicationFile&v=4",
+    "source_type": "national-regulator",
+    "version": "2026-02-24",
+    "retrieved_at": "2026-09-07T00:00:00Z",
+    "last_verified_at": "2026-09-07T00:00:00Z",
+    "license_notes": "Official regulator assignment list. Reuse must retain source attribution; review current BNetzA terms before redistributing the raw document.",
+    "attribution": "Source: Bundesnetzagentur"
+  },
+  "records": [
+    {"mcc":"262","mnc":"01","country_iso2":"DE","assignment_name":"Telekom Deutschland GmbH","status":"active","operator":{"slug":"telekom-deutschland","name":"Telekom Deutschland GmbH","brand":"Telekom","website":"https://www.telekom.de/","aliases":["Telekom Deutschland GmbH","Telekom","D1-Netz"]}},
+    {"mcc":"262","mnc":"02","country_iso2":"DE","assignment_name":"Vodafone GmbH","status":"active","operator":{"slug":"vodafone-de","name":"Vodafone GmbH","brand":"Vodafone","website":"https://www.vodafone.de/","aliases":["Vodafone GmbH","Vodafone","D2-Netz"]}},
+    {"mcc":"262","mnc":"03","country_iso2":"DE","assignment_name":"Telefónica Germany GmbH & Co. oHG","status":"active","operator":{"slug":"o2-de","name":"Telefónica Germany GmbH & Co. oHG","brand":"O2","website":"https://www.o2online.de/","aliases":["Telefónica Germany GmbH & Co. oHG","Telefónica Germany","O2","E2-Netz"]}},
+    {"mcc":"262","mnc":"04","country_iso2":"DE","assignment_name":"Vodafone GmbH","status":"active","operator":{"slug":"vodafone-de","name":"Vodafone GmbH","brand":"Vodafone","website":"https://www.vodafone.de/","aliases":["Vodafone GmbH","Vodafone","D2-Netz"]}},
+    {"mcc":"262","mnc":"05","country_iso2":"DE","assignment_name":"Telefónica Germany GmbH & Co. oHG","status":"active","operator":{"slug":"o2-de","name":"Telefónica Germany GmbH & Co. oHG","brand":"O2","website":"https://www.o2online.de/","aliases":["Telefónica Germany GmbH & Co. oHG","Telefónica Germany","O2","E2-Netz"]}},
+    {"mcc":"262","mnc":"06","country_iso2":"DE","assignment_name":"Telekom Deutschland GmbH","status":"active","operator":{"slug":"telekom-deutschland","name":"Telekom Deutschland GmbH","brand":"Telekom","website":"https://www.telekom.de/","aliases":["Telekom Deutschland GmbH","Telekom","D1-Netz"]}},
+    {"mcc":"262","mnc":"07","country_iso2":"DE","assignment_name":"Telefónica Germany GmbH & Co. oHG","status":"active","operator":{"slug":"o2-de","name":"Telefónica Germany GmbH & Co. oHG","brand":"O2","website":"https://www.o2online.de/","aliases":["Telefónica Germany GmbH & Co. oHG","Telefónica Germany","O2","E2-Netz"]}},
+    {"mcc":"262","mnc":"08","country_iso2":"DE","assignment_name":"Telefónica Germany GmbH & Co. oHG","status":"active","operator":{"slug":"o2-de","name":"Telefónica Germany GmbH & Co. oHG","brand":"O2","website":"https://www.o2online.de/","aliases":["Telefónica Germany GmbH & Co. oHG","Telefónica Germany","O2","E2-Netz"]}},
+    {"mcc":"262","mnc":"09","country_iso2":"DE","assignment_name":"Vodafone GmbH","status":"active","operator":{"slug":"vodafone-de","name":"Vodafone GmbH","brand":"Vodafone","website":"https://www.vodafone.de/","aliases":["Vodafone GmbH","Vodafone","D2-Netz"]}},
+    {"mcc":"262","mnc":"10","country_iso2":"DE","assignment_name":"DB Netz AG","status":"active"},
+    {"mcc":"262","mnc":"11","country_iso2":"DE","assignment_name":"Telefónica Germany GmbH & Co. oHG","status":"active","operator":{"slug":"o2-de","name":"Telefónica Germany GmbH & Co. oHG","brand":"O2","website":"https://www.o2online.de/","aliases":["Telefónica Germany GmbH & Co. oHG","Telefónica Germany","O2","E2-Netz"]}},
+    {"mcc":"262","mnc":"12","country_iso2":"DE","assignment_name":"Telefónica Germany GmbH & Co. oHG","status":"active","operator":{"slug":"o2-de","name":"Telefónica Germany GmbH & Co. oHG","brand":"O2","website":"https://www.o2online.de/","aliases":["Telefónica Germany GmbH & Co. oHG","Telefónica Germany","O2","E2-Netz"]}},
+    {"mcc":"262","mnc":"13","country_iso2":"DE","assignment_name":"Bundesamt für Ausrüstung, Informationstechnik und Nutzung der Bundeswehr","status":"active"},
+    {"mcc":"262","mnc":"14","country_iso2":"DE","assignment_name":"Lebara Limited","status":"active"},
+    {"mcc":"262","mnc":"15","country_iso2":"DE","assignment_name":"Airdata AG","status":"active"},
+    {"mcc":"262","mnc":"18","country_iso2":"DE","assignment_name":"NetCologne Gesellschaft für Telekommunikation mbH","status":"active"},
+    {"mcc":"262","mnc":"19","country_iso2":"DE","assignment_name":"Inquam Deutschland GmbH","status":"active"},
+    {"mcc":"262","mnc":"20","country_iso2":"DE","assignment_name":"Telefónica Germany GmbH & Co. oHG","status":"active","operator":{"slug":"o2-de","name":"Telefónica Germany GmbH & Co. oHG","brand":"O2","website":"https://www.o2online.de/","aliases":["Telefónica Germany GmbH & Co. oHG","Telefónica Germany","O2","E2-Netz"]}},
+    {"mcc":"262","mnc":"21","country_iso2":"DE","assignment_name":"Mass Response Service GmbH","status":"active"},
+    {"mcc":"262","mnc":"22","country_iso2":"DE","assignment_name":"sipgate Wireless GmbH","status":"active"},
+    {"mcc":"262","mnc":"23","country_iso2":"DE","assignment_name":"Drillisch Netz AG","status":"active"},
+    {"mcc":"262","mnc":"24","country_iso2":"DE","assignment_name":"TelcoVillage GmbH","status":"active"},
+    {"mcc":"262","mnc":"25","country_iso2":"DE","assignment_name":"MTEL Deutschland GmbH","status":"active"},
+    {"mcc":"262","mnc":"26","country_iso2":"DE","assignment_name":"Simsalasim GmbH","status":"active"},
+    {"mcc":"262","mnc":"42","country_iso2":"DE","assignment_name":"Vodafone GmbH","status":"active","operator":{"slug":"vodafone-de","name":"Vodafone GmbH","brand":"Vodafone","website":"https://www.vodafone.de/","aliases":["Vodafone GmbH","Vodafone","D2-Netz"]}},
+    {"mcc":"262","mnc":"43","country_iso2":"DE","assignment_name":"Vodafone GmbH","status":"active","operator":{"slug":"vodafone-de","name":"Vodafone GmbH","brand":"Vodafone","website":"https://www.vodafone.de/","aliases":["Vodafone GmbH","Vodafone","D2-Netz"]}},
+    {"mcc":"262","mnc":"70","country_iso2":"DE","assignment_name":"Bundesanstalt für den Digitalfunk der Behörden und Organisationen mit Sicherheitsaufgaben","status":"active"}
+  ]
+}

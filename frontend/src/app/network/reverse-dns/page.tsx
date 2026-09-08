@@ -1,0 +1,2 @@
+import{NetworkToolPage}from"@/components/network/network-tool-page";import{networkMetadata}from"@/lib/network-metadata";
+export const metadata=networkMetadata("Reverse DNS Lookup","Find PTR hostnames for a validated IPv4 or IPv6 address.","/network/reverse-dns");export default function Page(){return <NetworkToolPage title="Reverse DNS Lookup" description="Run a safe PTR lookup for one IPv4 or IPv6 address and see returned hostnames and lookup duration." mode="reverse-dns"/>}

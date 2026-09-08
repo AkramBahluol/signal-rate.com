@@ -1,0 +1,2 @@
+import{NetworkToolPage}from"@/components/network/network-tool-page";import{networkMetadata}from"@/lib/network-metadata";
+export const metadata=networkMetadata("CIDR Calculator","Convert IPv4 CIDR ranges and contiguous netmasks with total-address calculations.","/network/cidr-calculator");export default function Page(){return <NetworkToolPage title="CIDR Calculator" description="Calculate an IPv4 network range from CIDR notation, or convert a contiguous subnet mask to its prefix and address count." mode="cidr"/>}

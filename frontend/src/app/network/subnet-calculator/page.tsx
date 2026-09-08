@@ -1,0 +1,2 @@
+import{NetworkToolPage}from"@/components/network/network-tool-page";import{networkMetadata}from"@/lib/network-metadata";
+export const metadata=networkMetadata("IPv4 Subnet Calculator","Calculate network, broadcast, masks, address counts and correct /31 and /32 host semantics.","/network/subnet-calculator");export default function Page(){return <NetworkToolPage title="IPv4 Subnet Calculator" description="Enter an IPv4 address and CIDR prefix to calculate its subnet boundaries, masks and usable-host semantics." mode="subnet"/>}

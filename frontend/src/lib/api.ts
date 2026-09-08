@@ -1,0 +1,2 @@
+export const publicApiUrl=process.env.NEXT_PUBLIC_API_URL??"http://localhost:8000"; export const serverApiUrl=process.env.API_INTERNAL_URL??publicApiUrl;
+export async function apiGet<T>(path:string):Promise<T>{const response=await fetch(`${serverApiUrl}/api/v1${path}`,{cache:"no-store",headers:{Accept:"application/json"}});if(!response.ok)throw new Error(`SignalRate API returned ${response.status}`);return response.json() as Promise<T>}

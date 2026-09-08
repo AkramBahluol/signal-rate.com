@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+node_modules/
+vendor/
+.next/
+frontend/.next/
+backend/bootstrap/cache/*.php
+backend/storage/logs/*.log
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

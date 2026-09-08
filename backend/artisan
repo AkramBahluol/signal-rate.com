@@ -1,0 +1,37 @@
+#!/usr/bin/env php
+<?php
+
+use Illuminate\Foundation\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+
+define('LARAVEL_START', microtime(true));
+
+// The Docker service exports local PostgreSQL/Redis settings. The `test` command
+// boots Laravel before PHPUnit can apply phpunit.xml, so force isolated stores
+// before the application is created rather than letting tests touch local data.
+if (($argv[1] ?? null) === 'test') {
+    foreach ([
+        'APP_ENV' => 'testing',
+        'CACHE_STORE' => 'array',
+        'DB_CONNECTION' => 'sqlite',
+        'DB_DATABASE' => ':memory:',
+        'DB_URL' => '',
+        'QUEUE_CONNECTION' => 'sync',
+        'SESSION_DRIVER' => 'array',
+    ] as $name => $value) {
+        putenv("{$name}={$value}");
+        $_ENV[$name] = $value;
+        $_SERVER[$name] = $value;
+    }
+}
+
+// Register the Composer autoloader...
+require __DIR__.'/vendor/autoload.php';
+
+// Bootstrap Laravel and handle the command...
+/** @var Application $app */
+$app = require_once __DIR__.'/bootstrap/app.php';
+
+$status = $app->handleCommand(new ArgvInput);
+
+exit($status);

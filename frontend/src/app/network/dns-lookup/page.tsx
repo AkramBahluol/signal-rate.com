@@ -1,0 +1,2 @@
+import{NetworkToolPage}from"@/components/network/network-tool-page";import{networkMetadata}from"@/lib/network-metadata";
+export const metadata=networkMetadata("DNS Lookup","Query A, AAAA, CNAME, MX, TXT, NS, SOA and CAA records with TTL details.","/network/dns-lookup");export default function Page(){return <NetworkToolPage title="DNS Lookup" description="Choose a supported DNS record type and inspect normalized values, TTL, and priority where applicable." mode="dns"/>}

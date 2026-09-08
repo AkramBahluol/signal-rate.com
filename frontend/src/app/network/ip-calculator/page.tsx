@@ -1,0 +1,2 @@
+import{NetworkToolPage}from"@/components/network/network-tool-page";import{networkMetadata}from"@/lib/network-metadata";
+export const metadata=networkMetadata("IP Address Calculator","Classify IPv4 and IPv6 addresses and expand compressed IPv6 safely.","/network/ip-calculator");export default function Page(){return <NetworkToolPage title="IP Address Calculator" description="Detect IP version and classify public, private, loopback, link-local, multicast, documentation and other special-purpose addresses." mode="ip-calculator"/>}

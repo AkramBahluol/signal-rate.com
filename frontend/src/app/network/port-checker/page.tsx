@@ -1,0 +1,2 @@
+import{NetworkToolPage}from"@/components/network/network-tool-page";import{networkMetadata}from"@/lib/network-metadata";
+export const metadata=networkMetadata("Safe Port Checker","Check one TCP port on a public host with SSRF, metadata-address and DNS-rebinding protections.","/network/port-checker");export default function Page(){return <NetworkToolPage title="Safe Port Checker" description="Test whether one TCP port is reachable from the SignalRate backend. Internal targets and multi-port scans are deliberately blocked." mode="port"/>}

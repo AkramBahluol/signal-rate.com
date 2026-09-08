@@ -1,0 +1,1 @@
+declare module "qrcode-svg"{export default class QRCode{constructor(options:{content:string;width?:number;height?:number;padding?:number;ecl?:"L"|"M"|"Q"|"H";join?:boolean;container?:string});svg():string}}

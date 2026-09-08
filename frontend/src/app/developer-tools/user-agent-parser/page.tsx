@@ -1,0 +1,1 @@
+import{DeveloperToolPage,developerToolMetadata}from"@/components/developer/developer-tool-page";export const metadata=developerToolMetadata("user-agent-parser");export default function Page(){return <DeveloperToolPage slug="user-agent-parser"/>}

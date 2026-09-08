@@ -1,0 +1,2 @@
+import{NetworkToolPage}from"@/components/network/network-tool-page";import{networkMetadata}from"@/lib/network-metadata";
+export const metadata=networkMetadata("Hostname Lookup","Resolve a public hostname to IPv4, IPv6 and canonical-name records.","/network/hostname-lookup");export default function Page(){return <NetworkToolPage title="Hostname Lookup" description="Resolve a public fully qualified hostname to A and AAAA addresses and canonical names without accepting URLs or internal hostnames." mode="hostname"/>}

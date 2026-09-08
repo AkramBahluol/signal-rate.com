@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "verified_at": "2026-09-07T00:00:00Z",
+  "families": [
+    {
+      "key": "http", "name": "HTTP Status Codes", "description": "Standard response status codes used by HTTP clients, servers, gateways, and APIs.",
+      "source": {"name": "IANA HTTP Status Code Registry", "url": "https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml", "type": "standard"},
+      "entries": [
+        ["100","Continue","The server received the request headers and the client may continue sending the request body."],
+        ["101","Switching Protocols","The server is changing protocols as requested by the client."],
+        ["200","OK","The request succeeded and the response contains the requested representation or result."],
+        ["201","Created","The request succeeded and created a new resource."],
+        ["202","Accepted","The request was accepted for processing, but processing has not necessarily completed."],
+        ["204","No Content","The request succeeded and there is no response body to return."],
+        ["206","Partial Content","The server fulfilled a valid range request with part of the selected representation."],
+        ["301","Moved Permanently","The target resource has a new permanent URI."],
+        ["302","Found","The target resource is temporarily available at another URI."],
+        ["303","See Other","The client should retrieve another resource with a GET or HEAD request."],
+        ["304","Not Modified","A conditional request found that the cached representation is still current."],
+        ["307","Temporary Redirect","The resource is temporarily elsewhere and the client must preserve the request method."],
+        ["308","Permanent Redirect","The resource permanently moved and the client must preserve the request method."],
+        ["400","Bad Request","The server cannot process the request because its syntax or framing is invalid."],
+        ["401","Unauthorized","The request lacks valid authentication credentials for the target resource."],
+        ["403","Forbidden","The server understood the request but refuses to authorize it."],
+        ["404","Not Found","The server did not find a current representation for the requested resource."],
+        ["405","Method Not Allowed","The request method is known but not supported by the target resource."],
+        ["408","Request Timeout","The server did not receive a complete request within the time it was prepared to wait."],
+        ["409","Conflict","The request conflicts with the current state of the target resource."],
+        ["410","Gone","The target resource is intentionally unavailable and is likely to remain so."],
+        ["411","Length Required","The server refuses the request because a required Content-Length was not provided."],
+        ["412","Precondition Failed","One or more request preconditions evaluated to false."],
+        ["413","Content Too Large","The request content is larger than the server is willing or able to process."],
+        ["414","URI Too Long","The request target is longer than the server is willing to interpret."],
+        ["415","Unsupported Media Type","The server does not support the request content format."],
+        ["416","Range Not Satisfiable","The requested byte range cannot be satisfied for the selected representation."],
+        ["418","Unused","This code is reserved by HTTP and cannot be assigned a future semantic meaning."],
+        ["422","Unprocessable Content","The server understood the content type and syntax but could not process the instructions."],
+        ["423","Locked","The source or destination resource of a WebDAV method is locked."],
+        ["424","Failed Dependency","A WebDAV method could not run because a dependent action failed."],
+        ["425","Too Early","The server is unwilling to risk processing a request that might be replayed."],
+        ["426","Upgrade Required","The server refuses the request under the current protocol but may accept it after an upgrade."],
+        ["428","Precondition Required","The origin server requires the request to be conditional."],
+        ["429","Too Many Requests","The client sent too many requests in a given period."],
+        ["431","Request Header Fields Too Large","The server refuses the request because its header fields are too large."],
+        ["451","Unavailable For Legal Reasons","Access to the resource is denied as a consequence of a legal demand."],
+        ["500","Internal Server Error","The server encountered an unexpected condition that prevented it from fulfilling the request."],
+        ["501","Not Implemented","The server does not support the functionality required to fulfill the request."],
+        ["502","Bad Gateway","A gateway or proxy received an invalid response from an upstream server."],
+        ["503","Service Unavailable","The server is temporarily unable to handle the request."],
+        ["504","Gateway Timeout","A gateway or proxy did not receive a timely response from an upstream server."],
+        ["505","HTTP Version Not Supported","The server does not support the major HTTP version used in the request."]
+      ]
+    },
+    {
+      "key": "mysql", "name": "MySQL Errors", "description": "Curated MySQL server and client errors with practical database troubleshooting.",
+      "source": {"name": "MySQL 8.4 Error Message Reference", "url": "https://dev.mysql.com/doc/mysql-errors/8.4/en/server-error-reference.html", "type": "official-vendor-documentation"},
+      "entries": [
+        ["1045","Access denied","The server rejected authentication for the supplied user, host, or credentials.","ER_ACCESS_DENIED_ERROR","28000"],
+        ["1049","Unknown database","The requested database name does not exist on the connected MySQL server.","ER_BAD_DB_ERROR","42000"],
+        ["1054","Unknown column","A statement refers to a column that is not available in the resolved table or scope.","ER_BAD_FIELD_ERROR","42S22"],
+        ["1062","Duplicate entry","An insert or update would violate a unique index or primary-key constraint.","ER_DUP_ENTRY","23000"],
+        ["1064","SQL syntax error","MySQL could not parse the SQL statement according to the active server grammar.","ER_PARSE_ERROR","42000"],
+        ["1146","Table does not exist","A statement refers to a table that is absent from the selected database.","ER_NO_SUCH_TABLE","42S02"],
+        ["1205","Lock wait timeout exceeded","A transaction waited longer than the configured limit to acquire a lock.","ER_LOCK_WAIT_TIMEOUT","HY000"],
+        ["1213","Deadlock found","InnoDB detected a transaction deadlock and rolled one participant back.","ER_LOCK_DEADLOCK","40001"],
+        ["2002","Connection error","The client could not establish the requested local or network connection to MySQL.","CR_CONNECTION_ERROR","HY000","https://dev.mysql.com/doc/refman/8.4/en/can-not-connect-to-server.html","MySQL: Problems Connecting to MySQL","official-vendor-documentation"]
+      ]
+    },
+    {
+      "key": "postgresql", "name": "PostgreSQL Errors", "description": "Selected PostgreSQL SQLSTATE conditions and reliable diagnosis guidance.",
+      "source": {"name": "PostgreSQL Error Codes Appendix", "url": "https://www.postgresql.org/docs/17/errcodes-appendix.html", "type": "official-vendor-documentation"},
+      "entries": [
+        ["23505","Unique violation","A statement violated a unique constraint.","unique_violation","duplicate key"],
+        ["23503","Foreign key violation","A statement would leave a foreign-key reference without a matching row.","foreign_key_violation"],
+        ["23502","Not-null violation","A null value was supplied for a column that does not allow nulls.","not_null_violation"],
+        ["22P02","Invalid text representation","Text input could not be converted to the target PostgreSQL data type.","invalid_text_representation"],
+        ["42P01","Undefined table","The referenced relation could not be resolved in the current database and search path.","undefined_table"],
+        ["42703","Undefined column","The referenced column does not exist in the resolved relation or query scope.","undefined_column"],
+        ["42601","Syntax error","PostgreSQL could not parse the SQL statement.","syntax_error"],
+        ["40001","Serialization failure","A transaction could not be serialized safely and was rolled back.","serialization_failure"],
+        ["40P01","Deadlock detected","PostgreSQL found a cycle of transactions waiting on one another and aborted one.","deadlock_detected"]
+      ]
+    },
+    {
+      "key": "smpp", "name": "SMPP Errors", "description": "Standard SMPP 3.4 command_status results for SMS platform integrations.",
+      "source": {"name": "SMPP Protocol Specification v3.4", "url": "https://smpp.org/SMPP_v3_4_Issue1_2.pdf", "type": "standard"},
+      "entries": [
+        ["00000000","No error","The SMPP request completed successfully.","ESME_ROK"],
+        ["00000001","Invalid message length","The PDU contains an invalid message length.","ESME_RINVMSGLEN"],
+        ["00000002","Invalid command length","The command_length field is invalid for the PDU.","ESME_RINVCMDLEN"],
+        ["00000003","Invalid command ID","The receiver does not recognize the command_id.","ESME_RINVCMDID"],
+        ["00000004","Invalid bind state","The command is not allowed in the current SMPP session state.","ESME_RINVBNDSTS"],
+        ["00000005","Already bound","The session is already bound and cannot accept another bind.","ESME_RALYBND"],
+        ["00000008","System error","The SMSC encountered an internal system error while handling the command.","ESME_RSYSERR"],
+        ["0000000A","Invalid source address","The source address supplied in the PDU is invalid.","ESME_RINVSRCADR"],
+        ["0000000B","Invalid destination address","The destination address supplied in the PDU is invalid.","ESME_RINVDSTADR"],
+        ["0000000C","Invalid message ID","The supplied message identifier is invalid or unknown.","ESME_RINVMSGID"],
+        ["0000000D","Bind failed","The SMSC rejected the bind request.","ESME_RBINDFAIL"],
+        ["0000000E","Invalid password","The password supplied during bind is invalid.","ESME_RINVPASWD"],
+        ["0000000F","Invalid system ID","The system_id supplied during bind is invalid.","ESME_RINVSYSID"],
+        ["00000014","Message queue full","The message queue has reached its capacity.","ESME_RMSGQFUL"]
+      ]
+    },
+    {
+      "key": "php", "name": "PHP Errors", "description": "Stable PHP engine error and exception classes with focused debugging guidance.",
+      "source": {"name": "PHP Predefined Exceptions", "url": "https://www.php.net/manual/en/reserved.exceptions.php", "type": "official-language-documentation"},
+      "entries": [
+        ["type-error","TypeError","A value, return value, argument, or property does not satisfy a declared PHP type.","TypeError",null,"https://www.php.net/manual/en/class.typeerror.php","PHP TypeError","official-language-documentation"],
+        ["value-error","ValueError","An argument has the correct type but an invalid value for the operation.","ValueError",null,"https://www.php.net/manual/en/class.valueerror.php","PHP ValueError","official-language-documentation"],
+        ["parse-error","ParseError","PHP could not parse source code because its syntax is invalid.","ParseError",null,"https://www.php.net/manual/en/class.parseerror.php","PHP ParseError","official-language-documentation"],
+        ["argument-count-error","ArgumentCountError","A function or method received the wrong number of arguments.","ArgumentCountError",null,"https://www.php.net/manual/en/class.argumentcounterror.php","PHP ArgumentCountError","official-language-documentation"],
+        ["division-by-zero-error","DivisionByZeroError","An integer division or modulo operation attempted to use zero as the divisor.","DivisionByZeroError",null,"https://www.php.net/manual/en/class.divisionbyzeroerror.php","PHP DivisionByZeroError","official-language-documentation"],
+        ["unhandled-match-error","UnhandledMatchError","No arm of a match expression handled the supplied value.","UnhandledMatchError",null,"https://www.php.net/manual/en/class.unhandledmatcherror.php","PHP UnhandledMatchError","official-language-documentation"],
+        ["assertion-error","AssertionError","An assertion evaluated to false and PHP was configured to throw.","AssertionError",null,"https://www.php.net/manual/en/class.assertionerror.php","PHP AssertionError","official-language-documentation"],
+        ["error-exception","ErrorException","A PHP warning or notice was converted into an exception by an error handler.","ErrorException",null,"https://www.php.net/manual/en/class.errorexception.php","PHP ErrorException","official-language-documentation"]
+      ]
+    },
+    {
+      "key": "laravel", "name": "Laravel Errors", "description": "Normalized, stable Laravel failure concepts rather than application-specific stack traces.",
+      "source": {"name": "Laravel 13.x Documentation", "url": "https://laravel.com/docs/13.x/errors", "type": "official-framework-documentation"},
+      "entries": [
+        ["route-not-defined","Route not defined","Laravel could not generate a URL because the requested named route is not registered.","RouteNotFoundException",null,"https://api.laravel.com/docs/13.x/Illuminate/Routing/UrlGenerator.html#method_route","Laravel URL Generator","official-framework-documentation"],
+        ["target-class-does-not-exist","Target class does not exist","The service container could not resolve a requested class or binding.","BindingResolutionException",null,"https://api.laravel.com/docs/13.x/Illuminate/Contracts/Container/BindingResolutionException.html","Laravel BindingResolutionException","official-framework-documentation"],
+        ["mass-assignment","Mass assignment blocked","Eloquent rejected attributes that are not allowed for mass assignment.","MassAssignmentException",null,"https://api.laravel.com/docs/13.x/Illuminate/Database/Eloquent/MassAssignmentException.html","Laravel MassAssignmentException","official-framework-documentation"],
+        ["csrf-token-mismatch","CSRF token mismatch","Laravel rejected a state-changing web request whose CSRF token was missing or invalid.","TokenMismatchException",null,"https://laravel.com/docs/13.x/csrf","Laravel CSRF Protection","official-framework-documentation"],
+        ["application-key-missing","Application key missing","The application has no valid APP_KEY for Laravel encryption services.","MissingAppKeyException",null,"https://api.laravel.com/docs/13.x/Illuminate/Encryption/MissingAppKeyException.html","Laravel MissingAppKeyException","official-framework-documentation"],
+        ["view-not-found","View not found","Laravel could not locate the named Blade view in its configured view paths.","ViewNotFound",null,"https://laravel.com/docs/13.x/views","Laravel Views","official-framework-documentation"],
+        ["storage-permission-denied","Storage permission denied","The PHP process cannot write a required Laravel storage or cache path.","PermissionDenied",null,"https://laravel.com/docs/13.x/deployment#directory-permissions","Laravel Directory Permissions","official-framework-documentation"],
+        ["class-not-found","Class not found","PHP autoloading could not find a class referenced by the Laravel application.","ClassNotFound",null,"https://getcomposer.org/doc/01-basic-usage.md#autoloading","Composer Autoloading","maintainer-documentation"]
+      ]
+    }
+  ],
+  "relations": [
+    ["http","401","http","403","commonly-confused"], ["http","404","http","410","commonly-confused"],
+    ["http","500","http","502","similar"], ["http","502","http","504","same-category"],
+    ["postgresql","23505","postgresql","23503","same-category"], ["postgresql","40001","postgresql","40P01","similar"],
+    ["mysql","1062","postgresql","23505","similar"], ["mysql","1213","postgresql","40P01","similar"],
+    ["smpp","0000000D","smpp","0000000E","possible-next-error"], ["php","type-error","php","value-error","commonly-confused"],
+    ["laravel","target-class-does-not-exist","laravel","class-not-found","commonly-confused"]
+  ]
+}

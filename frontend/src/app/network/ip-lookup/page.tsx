@@ -1,0 +1,2 @@
+import{NetworkToolPage}from"@/components/network/network-tool-page";import{networkMetadata}from"@/lib/network-metadata";
+export const metadata=networkMetadata("IP Address Lookup","Validate an IPv4 or IPv6 address and inspect available geolocation, ASN, RDAP and reverse-DNS data.","/network/ip-lookup");export default function Page(){return <NetworkToolPage title="IP Address Lookup" description="Look up a public IPv4 or IPv6 address. Provider, source, retrieval time, failures, and unavailable fields remain explicit." mode="ip-lookup"/>}
