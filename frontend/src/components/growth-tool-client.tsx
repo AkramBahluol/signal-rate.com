@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import { useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import type { GrowthKind } from "@/lib/growth-tools";
 import type { LocaleUrl } from "@/lib/i18n";
 import { common } from "@/lib/i18n";
@@ -26,23 +26,298 @@ import { zonedWallTimeToUtc } from "@/lib/timezone";
 import { publicApiUrl } from "@/lib/api";
 import { NetworkTool } from "@/components/network/network-tool";
 
+const LocaleContext = createContext<string>("en");
+const labels: Record<string, Record<string, string>> = {
+  ar: {
+    Mode: "الوضع",
+    "Password length": "طول كلمة المرور",
+    "X / start": "القيمة X / البداية",
+    "Y / percent": "القيمة Y / النسبة",
+    "Date of birth": "تاريخ الميلاد",
+    "Calculate on": "الحساب في تاريخ",
+    "Start time": "وقت البداية",
+    "End time": "وقت النهاية",
+    Hours: "الساعات",
+    Minutes: "الدقائق",
+    "Loan amount": "مبلغ القرض",
+    "Annual interest %": "الفائدة السنوية %",
+    "Term (months)": "المدة (بالأشهر)",
+    Principal: "رأس المال",
+    Years: "السنوات",
+    "Monthly contribution": "المساهمة الشهرية",
+    Category: "الفئة",
+    Value: "القيمة",
+    From: "من",
+    To: "إلى",
+    "Hours per day": "ساعات يوميًا",
+    "Estimated GB per hour": "جيجابايت تقديرية لكل ساعة",
+    "Start date": "تاريخ البداية",
+    "End date": "تاريخ النهاية",
+    "Date and time": "التاريخ والوقت",
+    "Source timezone": "المنطقة الزمنية الأصلية",
+    "Public domain or URL": "نطاق أو رابط عام",
+    Amount: "المبلغ",
+  },
+  es: {
+    Mode: "Modo",
+    "Password length": "Longitud de contraseña",
+    "Date of birth": "Fecha de nacimiento",
+    "Calculate on": "Calcular en la fecha",
+    "Start time": "Hora inicial",
+    "End time": "Hora final",
+    Hours: "Horas",
+    Minutes: "Minutos",
+    "Loan amount": "Importe del préstamo",
+    "Annual interest %": "Interés anual %",
+    "Term (months)": "Plazo (meses)",
+    Principal: "Capital inicial",
+    Years: "Años",
+    "Monthly contribution": "Aportación mensual",
+    Category: "Categoría",
+    Value: "Valor",
+    From: "De",
+    To: "A",
+    "Hours per day": "Horas al día",
+    "Estimated GB per hour": "GB estimados por hora",
+    "Start date": "Fecha inicial",
+    "End date": "Fecha final",
+    "Date and time": "Fecha y hora",
+    "Source timezone": "Zona horaria de origen",
+    "Public domain or URL": "Dominio o URL pública",
+    Amount: "Importe",
+  },
+  fr: {
+    Mode: "Mode",
+    "Password length": "Longueur du mot de passe",
+    "Date of birth": "Date de naissance",
+    "Calculate on": "Calculer à la date",
+    "Start time": "Heure de début",
+    "End time": "Heure de fin",
+    Hours: "Heures",
+    Minutes: "Minutes",
+    "Loan amount": "Montant du prêt",
+    "Annual interest %": "Taux annuel %",
+    "Term (months)": "Durée (mois)",
+    Principal: "Capital initial",
+    Years: "Années",
+    "Monthly contribution": "Versement mensuel",
+    Category: "Catégorie",
+    Value: "Valeur",
+    From: "De",
+    To: "Vers",
+    "Hours per day": "Heures par jour",
+    "Estimated GB per hour": "Go estimés par heure",
+    "Start date": "Date de début",
+    "End date": "Date de fin",
+    "Date and time": "Date et heure",
+    "Source timezone": "Fuseau horaire source",
+    "Public domain or URL": "Domaine ou URL publique",
+    Amount: "Montant",
+  },
+  de: {
+    Mode: "Modus",
+    "Password length": "Passwortlänge",
+    "Date of birth": "Geburtsdatum",
+    "Calculate on": "Berechnen am",
+    "Start time": "Startzeit",
+    "End time": "Endzeit",
+    Hours: "Stunden",
+    Minutes: "Minuten",
+    "Loan amount": "Kreditbetrag",
+    "Annual interest %": "Jahreszins %",
+    "Term (months)": "Laufzeit (Monate)",
+    Principal: "Anfangskapital",
+    Years: "Jahre",
+    "Monthly contribution": "Monatliche Einzahlung",
+    Category: "Kategorie",
+    Value: "Wert",
+    From: "Von",
+    To: "Nach",
+    "Hours per day": "Stunden pro Tag",
+    "Estimated GB per hour": "Geschätzte GB pro Stunde",
+    "Start date": "Startdatum",
+    "End date": "Enddatum",
+    "Date and time": "Datum und Uhrzeit",
+    "Source timezone": "Ausgangszeitzone",
+    "Public domain or URL": "Öffentliche Domain oder URL",
+    Amount: "Betrag",
+  },
+  "pt-br": {
+    Mode: "Modo",
+    "Password length": "Tamanho da senha",
+    "Date of birth": "Data de nascimento",
+    "Calculate on": "Calcular na data",
+    "Start time": "Hora inicial",
+    "End time": "Hora final",
+    Hours: "Horas",
+    Minutes: "Minutos",
+    "Loan amount": "Valor do empréstimo",
+    "Annual interest %": "Juros anuais %",
+    "Term (months)": "Prazo (meses)",
+    Principal: "Capital inicial",
+    Years: "Anos",
+    "Monthly contribution": "Contribuição mensal",
+    Category: "Categoria",
+    Value: "Valor",
+    From: "De",
+    To: "Para",
+    "Hours per day": "Horas por dia",
+    "Estimated GB per hour": "GB estimados por hora",
+    "Start date": "Data inicial",
+    "End date": "Data final",
+    "Date and time": "Data e hora",
+    "Source timezone": "Fuso horário de origem",
+    "Public domain or URL": "Domínio ou URL pública",
+    Amount: "Valor",
+  },
+  ja: {
+    Mode: "モード",
+    "Password length": "パスワードの長さ",
+    "Date of birth": "生年月日",
+    "Calculate on": "計算日",
+    "Start time": "開始時刻",
+    "End time": "終了時刻",
+    Hours: "時間",
+    Minutes: "分",
+    "Loan amount": "借入額",
+    "Annual interest %": "年利 %",
+    "Term (months)": "期間（月）",
+    Principal: "元金",
+    Years: "年数",
+    "Monthly contribution": "毎月の積立",
+    Category: "種類",
+    Value: "値",
+    From: "変換元",
+    To: "変換先",
+    "Hours per day": "1日あたりの時間",
+    "Estimated GB per hour": "1時間あたりの推定GB",
+    "Start date": "開始日",
+    "End date": "終了日",
+    "Date and time": "日時",
+    "Source timezone": "変換元タイムゾーン",
+    "Public domain or URL": "公開ドメインまたはURL",
+    Amount: "金額",
+  },
+  hi: {
+    Mode: "मोड",
+    "Password length": "पासवर्ड की लंबाई",
+    "Date of birth": "जन्म तिथि",
+    "Calculate on": "इस तिथि पर आयु",
+    "Start time": "आरंभ समय",
+    "End time": "समाप्ति समय",
+    Hours: "घंटे",
+    Minutes: "मिनट",
+    "Loan amount": "ऋण राशि",
+    "Annual interest %": "वार्षिक ब्याज %",
+    "Term (months)": "अवधि (महीने)",
+    Principal: "मूलधन",
+    Years: "वर्ष",
+    "Monthly contribution": "मासिक योगदान",
+    Category: "श्रेणी",
+    Value: "मान",
+    From: "से",
+    To: "तक",
+    "Hours per day": "प्रति दिन घंटे",
+    "Estimated GB per hour": "प्रति घंटे अनुमानित GB",
+    "Start date": "आरंभ तिथि",
+    "End date": "समाप्ति तिथि",
+    "Date and time": "तारीख और समय",
+    "Source timezone": "स्रोत समय क्षेत्र",
+    "Public domain or URL": "सार्वजनिक डोमेन या URL",
+    Amount: "राशि",
+  },
+  ko: {
+    Mode: "모드",
+    "Password length": "비밀번호 길이",
+    "Date of birth": "생년월일",
+    "Calculate on": "기준 날짜",
+    "Start time": "시작 시간",
+    "End time": "종료 시간",
+    Hours: "시간",
+    Minutes: "분",
+    "Loan amount": "대출 금액",
+    "Annual interest %": "연 이율 %",
+    "Term (months)": "기간(개월)",
+    Principal: "원금",
+    Years: "연수",
+    "Monthly contribution": "월 납입액",
+    Category: "범주",
+    Value: "값",
+    From: "변환 전",
+    To: "변환 후",
+    "Hours per day": "일일 시간",
+    "Estimated GB per hour": "시간당 예상 GB",
+    "Start date": "시작 날짜",
+    "End date": "종료 날짜",
+    "Date and time": "날짜 및 시간",
+    "Source timezone": "원본 시간대",
+    "Public domain or URL": "공개 도메인 또는 URL",
+    Amount: "금액",
+  },
+  id: {
+    Mode: "Mode",
+    "Password length": "Panjang kata sandi",
+    "Date of birth": "Tanggal lahir",
+    "Calculate on": "Hitung pada tanggal",
+    "Start time": "Waktu mulai",
+    "End time": "Waktu selesai",
+    Hours: "Jam",
+    Minutes: "Menit",
+    "Loan amount": "Jumlah pinjaman",
+    "Annual interest %": "Bunga tahunan %",
+    "Term (months)": "Jangka waktu (bulan)",
+    Principal: "Modal awal",
+    Years: "Tahun",
+    "Monthly contribution": "Kontribusi bulanan",
+    Category: "Kategori",
+    Value: "Nilai",
+    From: "Dari",
+    To: "Ke",
+    "Hours per day": "Jam per hari",
+    "Estimated GB per hour": "Perkiraan GB per jam",
+    "Start date": "Tanggal mulai",
+    "End date": "Tanggal akhir",
+    "Date and time": "Tanggal dan waktu",
+    "Source timezone": "Zona waktu asal",
+    "Public domain or URL": "Domain atau URL publik",
+    Amount: "Jumlah",
+  },
+};
+const translatedLabel = (locale: string, label: string) =>
+  labels[locale]?.[label] ?? label;
 const Field = ({
   label,
   children,
 }: {
   label: string;
   children: React.ReactNode;
-}) => (
-  <label className="grid gap-2 text-sm font-semibold text-slate-700">
-    <span>{label}</span>
-    {children}
-  </label>
-);
+}) => {
+  const locale = useContext(LocaleContext);
+  return (
+    <label className="grid gap-2 text-sm font-semibold text-slate-700">
+      <span>{translatedLabel(locale, label)}</span>
+      {children}
+    </label>
+  );
+};
 const input =
   "rounded-xl border border-slate-300 bg-white px-3 py-3 text-base font-normal";
 const fmt = (v: number, locale: string) =>
   new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(v);
 export function GrowthToolClient({
+  kind,
+  locale,
+}: {
+  kind: GrowthKind;
+  locale?: LocaleUrl;
+}) {
+  return (
+    <LocaleContext.Provider value={locale ?? "en"}>
+      <GrowthToolInner kind={kind} locale={locale} />
+    </LocaleContext.Provider>
+  );
+}
+function GrowthToolInner({
   kind,
   locale,
 }: {
