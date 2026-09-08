@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-08T05:29:30.556Z",
-  "audited_origin": "http://127.0.0.1:8080",
+  "generated_at": "2026-09-08T11:09:08.891Z",
+  "audited_origin": "https://signal-rate.com",
   "totals": {
     "total_routes": 440,
     "indexable_routes": 434,
@@ -208,7 +208,7 @@
       ],
       "content_status": "useful",
       "data_verification_status": "not applicable",
-      "word_count": 166,
+      "word_count": 177,
       "internal_links_count": 22,
       "thin": false,
       "requires_more_content": false,
