@@ -96,7 +96,8 @@ const inventory = await parallel(routes, async path => {
   };
 });
 
-const internalTargets = [...new Set(inventory.flatMap(item => item.internal_links))].filter(path => !path.startsWith("/_next/") && !path.startsWith("/api/"));
+const internalTargets = [...new Set(inventory.flatMap(item => item.internal_links))].filter(path =>
+  !path.startsWith("/_next/") && !path.startsWith("/api/") && !path.startsWith("/cdn-cgi/"));
 const auditedStatuses = new Map(inventory.map(item => [item.url, item.status]));
 const statuses = await parallel(internalTargets, async path => {
   if (auditedStatuses.has(path)) return { url: path, status: auditedStatuses.get(path), location: null };

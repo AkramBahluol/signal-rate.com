@@ -4,9 +4,9 @@ Report date: 8 September 2026.
 
 ## Current result
 
-Milestone 10 is publicly reachable over HTTPS and the deployed application is healthy, but final launch sign-off remains **blocked by missing real contact information**. The public `/contact` page correctly exposes no fabricated address and states that the production contact channel is not configured.
+Milestone 10 production launch is complete. SignalRate is publicly reachable at `https://signal-rate.com`, the deployed application is healthy, and all launch-blocking checks pass.
 
-The production source is deployed at commit `5fd19510b52b` on `prod.signal-rate.com` (`102.213.181.163`). All five production containers are healthy after a host reboot: container Nginx, standalone Next.js, PHP 8.4/Laravel, PostgreSQL 17, and Redis 8. The private application gateway is bound only to `127.0.0.1:8080`; frontend and backend ports are container-only, and PostgreSQL and Redis have no host bindings.
+The production source is deployed on `prod.signal-rate.com` (`102.213.181.163`) using commit-tagged images. All five production containers are healthy: container Nginx, standalone Next.js, PHP 8.4/Laravel, PostgreSQL 17, and Redis 8. The private application gateway is bound only to `127.0.0.1:8080`; frontend and backend ports are container-only, and PostgreSQL and Redis have no host bindings.
 
 Public DNS now delegates to Cloudflare nameservers `desi.ns.cloudflare.com` and `henrik.ns.cloudflare.com`; apex and `www` return Cloudflare proxy addresses. Cloudflare reaches the origin successfully using the installed Origin CA certificate, valid from 8 September 2026 through 4 September 2041 and covering `signal-rate.com` plus `*.signal-rate.com`. The certificate and private key match, the key is mode `0600`, and no private material is stored in Git.
 
@@ -25,11 +25,11 @@ Public validation now returns 200 for `https://signal-rate.com/`. Both HTTP host
 
 ## Deployment and data validation
 
-The release images are `signalrate/frontend-production:5fd19510b52b` and `signalrate/backend-production:5fd19510b52b`. The production environment file is mode `0600`, excluded from Git, uses generated secrets, keeps `APP_DEBUG=false`, and keeps ads and analytics disabled. No secret value is included in this report or repository.
+The release uses commit-tagged `signalrate/frontend-production` and `signalrate/backend-production` images. The production environment file is mode `0600`, excluded from Git, uses generated secrets, keeps `APP_DEBUG=false`, and keeps ads and analytics disabled. The public contact address is `contact@signal-rate.com`; no private forwarding destination or secret value is included in this report, rendered pages, or repository.
 
 Forward-only migrations completed. The approved idempotent imports produced 248 countries/areas, 241 calling-code relationships, 27 reviewed MCC/MNC assignments, and 91 verified error records. Re-running the imports added no duplicate telecom records, and every migration reports `Ran`.
 
-Two same-server PostgreSQL custom-format backups were created before and after the migration/import sequence. Both have mode `0600` and matching SHA-256 sidecars. The populated archive is 165,435 bytes with 349 readable archive entries. A destructive restore was not performed against the production database. Encrypted off-server backup storage and a disposable restore destination remain manual launch requirements.
+Same-server PostgreSQL custom-format backups were created before migration, after import, and during the final guarded deployment. They have mode `0600` and matching SHA-256 sidecars. The populated archive structure has 349 readable entries. A destructive restore was not performed against the production database. Encrypted off-server backup storage and a disposable restore destination remain operational follow-up.
 
 The loopback origin and public Cloudflare path returned the expected responses. The final external crawl covered 440 routes: 434 indexable, six intentional noindex, 49 tools, 98 error pages, 285 telecom pages, 22 network pages, 23 developer pages, and four mobile-plan pages. It found zero broken internal links and zero unexpected redirects. A same-host hairpin crawl produced transient ten-second connection timeouts under concurrency, but each reported page returned 200 when tested individually; the authoritative external crawl then passed cleanly.
 
@@ -43,12 +43,10 @@ The loopback origin and public Cloudflare path returned the expected responses. 
 - Next.js production build: all 67 route entries compile successfully.
 - Local Milestone 9 environment remains healthy; its frontend, backend, PostgreSQL, and internal-only Redis continue to run, and representative frontend/API responses return 200.
 - A real browser smoke test at 394 px found no horizontal overflow. The SMS character counter accepted an emoji-bearing message and correctly reported Unicode, 23 characters, and one segment.
+- Contact, Privacy, Terms, and Data Policy render only `contact@signal-rate.com` as their public `mailto:` destination. Cloudflare email obfuscation remains enabled, and the audit excludes Cloudflare-owned `/cdn-cgi/` infrastructure paths without suppressing application links.
 
-## Remaining launch blocker and operational follow-up
+## Remaining operational follow-up
 
-1. Provide the real public contact email. It must be placed in `NEXT_PUBLIC_CONTACT_EMAIL` and the frontend rebuilt before final launch sign-off; no placeholder address will be invented.
-2. Configure encrypted off-server backups and uptime, certificate-expiry, and disk monitoring, and identify a disposable restore-test destination. These remain documented operational follow-up tasks.
-
-After the real email is supplied, update the protected environment, rebuild/redeploy through the guarded script, re-run the public smoke suite and crawl, verify the rendered contact link, and observe logs. Only then may Milestone 10 receive the requested final completion commit.
+Configure encrypted off-server backups and uptime, certificate-expiry, and disk monitoring, and identify a disposable restore-test destination. This does not change the completed public launch result, but remains required ongoing production operations work.
 
 AdSense and analytics remain disabled. Search Console verification remains a domain-owner action; no verification token has been invented.

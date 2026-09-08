@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-08T11:09:08.891Z",
+  "generated_at": "2026-09-08T11:30:46.608Z",
   "audited_origin": "https://signal-rate.com",
   "totals": {
     "total_routes": 440,
@@ -208,8 +208,8 @@
       ],
       "content_status": "useful",
       "data_verification_status": "not applicable",
-      "word_count": 177,
-      "internal_links_count": 22,
+      "word_count": 166,
+      "internal_links_count": 23,
       "thin": false,
       "requires_more_content": false,
       "primary_search_intent": "informational"
@@ -6277,7 +6277,7 @@
       ],
       "content_status": "useful",
       "data_verification_status": "verified data shown",
-      "word_count": 238,
+      "word_count": 236,
       "internal_links_count": 24,
       "thin": false,
       "requires_more_content": false,
@@ -10737,8 +10737,8 @@
       ],
       "content_status": "useful",
       "data_verification_status": "not applicable",
-      "word_count": 351,
-      "internal_links_count": 22,
+      "word_count": 349,
+      "internal_links_count": 23,
       "thin": false,
       "requires_more_content": false,
       "primary_search_intent": "informational"
@@ -10781,8 +10781,8 @@
       ],
       "content_status": "useful",
       "data_verification_status": "not applicable",
-      "word_count": 215,
-      "internal_links_count": 22,
+      "word_count": 226,
+      "internal_links_count": 23,
       "thin": false,
       "requires_more_content": false,
       "primary_search_intent": "informational"

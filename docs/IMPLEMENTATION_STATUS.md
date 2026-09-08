@@ -178,7 +178,7 @@
 - Directory controllers expose read-only, rate-limited `/api/v1` endpoints; public browser access is limited by CORS to the configured frontend URL.
 - Telecom records carry `source_name`, `source_url`, `last_verified_at`, and `verification_status`. UI source notices never label unverified rows as current.
 
-## Milestone 10 production launch (in progress)
+## Milestone 10 production launch (complete)
 
 - Created the `milestone-10-production-launch` branch from verified Milestone 9 commit `501147a` without discarding user work.
 - Hardened the production Compose topology with a loopback-only gateway, separate edge/internal-data networks, exact trusted-proxy addressing, bounded resources/PIDs/logs, non-root application images, persistent data/cache volumes, and private PostgreSQL/Redis services.
@@ -189,8 +189,8 @@
 - Ran forward-only migrations and approved imports on the production database: 248 countries/areas, 241 calling-code relationships, 27 reviewed MCC/MNC assignments, and 91 verified errors. Idempotence checks added no duplicates. Pre- and post-migration custom PostgreSQL backups have validated SHA-256 sidecars; the populated archive has 349 readable entries.
 - The real production-origin crawl covered 440 routes (434 indexable and six intentional noindex) with zero broken links or redirects. Representative origin pages/APIs, robots, sitemap, 404 behavior, disabled `ads.txt`, proxy handling, and rate limits passed.
 - Public DNS now delegates to Cloudflare, apex and `www` are proxied, and the matching root-only Origin CA certificate is active. Canonical HTTPS returns 200; HTTP and `www` redirect correctly; the full external crawl passes all 440 routes with 434 indexable, six intentional noindex, zero broken links, and zero unexpected redirects. Public smoke/security checks and a 394 px interactive browser check pass.
-- Final launch sign-off remains blocked solely by absent real contact information: `NEXT_PUBLIC_CONTACT_EMAIL` is empty and the public contact page deliberately states that no channel is configured. A real address must be supplied, followed by a guarded rebuild/redeploy and final validation. Encrypted off-host backups and monitoring also remain documented operational follow-up; see `PRODUCTION_LAUNCH_REPORT.md`.
-- Final validation at this checkpoint: Laravel 88 tests/384 assertions, Pint 139 files, Composer strict validation, frontend 35 tests, ESLint, TypeScript, and the 67-entry Next.js production build all pass. The existing local Milestone 9 Compose environment remains healthy.
+- Configured the real public address `contact@signal-rate.com` in the protected production environment and rebuilt the frontend. Contact, Privacy, Terms, and Data Policy use only that public address; no private forwarding destination is exposed. Cloudflare email obfuscation remains enabled and its infrastructure paths are excluded from internal-link auditing.
+- Final validation: Laravel 88 tests/384 assertions, Pint 139 files, Composer strict validation, frontend 35 tests, ESLint, TypeScript, the 67-entry Next.js production build, production health, public smoke checks, canonical redirects, and the 440-route public crawl all pass. The existing local Milestone 9 Compose environment remains healthy. Encrypted off-host backups and monitoring remain operational follow-up; see `PRODUCTION_LAUNCH_REPORT.md`.
 
 ## Known data state
 - The bundled source-reviewed dataset contains 248 UN M49 countries/areas, 241 E.164 calling-code relationships, 27 BNetzA German MCC/MNC assignments, and three explicitly matched German public operator entities. No assignment or carrier capability was invented.

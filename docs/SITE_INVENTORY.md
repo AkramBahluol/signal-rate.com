@@ -1,6 +1,6 @@
 # SignalRate site inventory
 
-Generated 2026-09-08T11:09:08.891Z by `node scripts/audit-site.mjs` against `https://signal-rate.com`. The JSON companion is the machine-readable source of truth and includes titles, descriptions, canonicals, schema types, verification classification, intent, link counts, and content flags.
+Generated 2026-09-08T11:30:46.608Z by `node scripts/audit-site.mjs` against `https://signal-rate.com`. The JSON companion is the machine-readable source of truth and includes titles, descriptions, canonicals, schema types, verification classification, intent, link counts, and content flags.
 
 ## Totals
 
