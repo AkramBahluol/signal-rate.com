@@ -7,10 +7,10 @@ const apiOrigin = (() => {
 const connectSources = ["'self'", "https://speed.cloudflare.com", ...(process.env.NODE_ENV === "development" && apiOrigin ? [apiOrigin] : [])].join(" ");
 const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT?.trim() ?? "";
 const adsenseEnabled = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true" && /^ca-pub-\d{16}$/.test(adsenseClient);
-const adsenseScriptSources = adsenseEnabled ? ["https://pagead2.googlesyndication.com", "https://fundingchoicesmessages.google.com"] : [];
-const adsenseConnectSources = adsenseEnabled ? ["https://pagead2.googlesyndication.com", "https://fundingchoicesmessages.google.com", "https://googleads.g.doubleclick.net"] : [];
-const adsenseFrameSources = adsenseEnabled ? ["https://fundingchoicesmessages.google.com", "https://googleads.g.doubleclick.net", "https://tpc.googlesyndication.com"] : [];
-const adsenseImageSources = adsenseEnabled ? ["https://pagead2.googlesyndication.com", "https://googleads.g.doubleclick.net", "https://tpc.googlesyndication.com"] : [];
+const adsenseScriptSources = adsenseEnabled ? ["https://pagead2.googlesyndication.com", "https://fundingchoicesmessages.google.com", "https://*.adtrafficquality.google"] : [];
+const adsenseConnectSources = adsenseEnabled ? ["https://pagead2.googlesyndication.com", "https://fundingchoicesmessages.google.com", "https://googleads.g.doubleclick.net", "https://*.adtrafficquality.google"] : [];
+const adsenseFrameSources = adsenseEnabled ? ["https://fundingchoicesmessages.google.com", "https://googleads.g.doubleclick.net", "https://tpc.googlesyndication.com", "https://*.adtrafficquality.google", "https://www.google.com"] : [];
+const adsenseImageSources = adsenseEnabled ? ["https://pagead2.googlesyndication.com", "https://googleads.g.doubleclick.net", "https://tpc.googlesyndication.com", "https://*.adtrafficquality.google"] : [];
 const scriptSources = ["'self'", "'unsafe-inline'", ...(process.env.NODE_ENV === "development" ? ["'unsafe-eval'"] : []), ...adsenseScriptSources].join(" ");
 const allowedConnections = [connectSources, ...adsenseConnectSources].join(" ");
 const frameSources = ["'self'", ...adsenseFrameSources].join(" ");
