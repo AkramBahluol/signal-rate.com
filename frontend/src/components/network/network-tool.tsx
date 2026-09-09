@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { ResultPanel } from "@/components/network/result-panel";
 import { networkApi, type NetworkApiResponse, type NetworkMode } from "@/lib/network";
 import {convertData,downloadTime} from "@/lib/traffic-tools";
+import{useLocaleCopy}from"@/components/use-locale";import{flagshipUiCopy,ipFieldLabels}from"@/lib/flagship-ui-copy";
 
 const ipModes: NetworkMode[] = ["ip-lookup", "rdap", "reverse-dns", "blacklist", "ip-calculator"];
 
 export function NetworkTool({ mode }: { mode: NetworkMode }) {
+  const{locale}=useLocaleCopy(),ipText=flagshipUiCopy(locale).ip;
   const [ip, setIp] = useState("");
   const [asn, setAsn] = useState("");
   const [hostname, setHostname] = useState("");
@@ -28,19 +30,19 @@ export function NetworkTool({ mode }: { mode: NetworkMode }) {
     fetch(networkApi("/my-ip"), { headers: { Accept: "application/json" }, signal: controller.signal })
       .then(async response => {
         const payload = await response.json() as NetworkApiResponse;
-        if (!response.ok || !payload.data) throw new Error(payload.message ?? "The lookup could not be completed.");
+        if (!response.ok || !payload.data) throw new Error(payload.message ?? ipText[1]);
         return payload.data;
       })
       .then(setResult)
       .catch(caught => {
         if (caught instanceof DOMException && caught.name === "AbortError") return;
-        setError(caught instanceof Error ? caught.message : "The network service is unavailable.");
+        setError(caught instanceof Error ? caught.message : ipText[2]);
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [mode]);
+  }, [mode,ipText]);
 
   async function request(url: string, options?: RequestInit) {
     setLoading(true);
@@ -78,7 +80,7 @@ export function NetworkTool({ mode }: { mode: NetworkMode }) {
     return request(networkApi(path), { method: "POST", body: JSON.stringify(body) });
   }
 
-  if (mode === "my-ip") return <div className="mt-8">{loading && <p className="rounded-2xl border bg-white p-5">Detecting the public address seen by SignalRate…</p>}{error && <ErrorMessage message={error} />}{result && <ResultPanel data={result} copyValue={String(result.ip ?? "")} />}</div>;
+  if (mode === "my-ip") return <div className="mt-8">{loading && <p className="rounded-2xl border bg-white p-5">{ipText[0]}</p>}{error && <ErrorMessage message={error} />}{result && <ResultPanel data={result} copyValue={String(result.ip ?? "")} keyLabels={ipFieldLabels(locale)} labels={{result:ipText[3],copy:ipText[4],copied:ipText[5],unavailable:ipText[6],yes:ipText[7],no:ipText[8],none:ipText[9]}}/>}</div>;
   if (mode === "bandwidth" || mode === "download-time") return <TransferCalculator mode={mode}/>;
 
   return <div className="mt-8"><form onSubmit={submit} className="rounded-2xl border bg-white p-5 shadow-sm"><div className="grid gap-4 sm:grid-cols-[1fr_auto]">{ipModes.includes(mode) && <Field label="IP address"><input required value={ip} onChange={event => setIp(event.target.value)} placeholder="8.8.8.8 or 2001:4860:4860::8888" className="mt-2 w-full rounded-xl border p-3 font-mono" /></Field>}{mode === "asn" && <Field label="Autonomous System Number"><input required value={asn} onChange={event => setAsn(event.target.value)} placeholder="AS15169" className="mt-2 w-full rounded-xl border p-3 font-mono" /></Field>}{["hostname","dns","port","spf","dkim","dmarc","ssl"].includes(mode) && <Field label={mode === "port" ? "Public host or IP" : mode === "ssl" ? "Public TLS hostname" : "Public hostname or domain"}><input required value={hostname} onChange={event => setHostname(event.target.value)} placeholder="example.com" className="mt-2 w-full rounded-xl border p-3 font-mono" /></Field>}{mode === "dkim"&&<Field label="DKIM selector"><input required value={selector} onChange={e=>setSelector(e.target.value)} className="mt-2 w-full rounded-xl border p-3 font-mono"/></Field>}{["redirect","headers"].includes(mode)&&<Field label="Public HTTP or HTTPS URL"><input required type="url" value={url} onChange={e=>setUrl(e.target.value)} className="mt-2 w-full rounded-xl border p-3 font-mono"/></Field>}{mode === "dns" && <Field label="Record type"><select value={recordType} onChange={event => setRecordType(event.target.value)} className="mt-2 w-full rounded-xl border p-3">{["A", "AAAA", "CNAME", "MX", "TXT", "NS", "SOA", "CAA"].map(type => <option key={type}>{type}</option>)}</select></Field>}{mode === "port" && <Field label="Single port"><input required type="number" min="1" max="65535" value={port} onChange={event => setPort(event.target.value)} className="mt-2 w-full rounded-xl border p-3" /></Field>}{mode === "subnet" && <><Field label="IPv4 address"><input required value={ip} onChange={event => setIp(event.target.value)} placeholder="192.168.1.10" className="mt-2 w-full rounded-xl border p-3 font-mono" /></Field><Field label="CIDR prefix"><input required type="number" min="0" max="32" value={cidr} onChange={event => setCidr(event.target.value)} className="mt-2 w-full rounded-xl border p-3" /></Field></>}{mode === "cidr" && <><Field label="IPv4 CIDR"><input value={cidrInput} onChange={event => { setCidrInput(event.target.value); if (event.target.value) setNetmask(""); }} placeholder="192.168.1.10/24" className="mt-2 w-full rounded-xl border p-3 font-mono" /></Field><Field label="Or netmask"><input value={netmask} onChange={event => { setNetmask(event.target.value); if (event.target.value) setCidrInput(""); }} placeholder="255.255.255.0" className="mt-2 w-full rounded-xl border p-3 font-mono" /></Field></>}<button disabled={loading} className="self-end rounded-xl bg-[#315efb] px-5 py-3 font-semibold text-white disabled:opacity-60">{loading ? "Checking…" : "Run lookup"}</button></div></form>{error && <ErrorMessage message={error} />}{result && <ResultPanel data={result} />}</div>;

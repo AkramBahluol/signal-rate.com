@@ -3,6 +3,7 @@ import { Footer, Header } from "@/components/site-chrome";
 import { GrowthToolClient } from "@/components/growth-tool-client";
 import { FlagshipSeoContent } from "@/components/flagship-seo-content";
 import { flagshipSeoByPath } from "@/lib/flagship-seo";
+import { localizedFlagship } from "@/lib/localized-flagships";
 import { common, localizedPath, shellCopy, type LocaleUrl } from "@/lib/i18n";
 import { jsonLd } from "@/lib/json-ld";
 import {
@@ -19,7 +20,7 @@ export function GrowthToolPage({
   locale?: LocaleUrl;
 }) {
   const localized = localizedTool(tool, locale),
-    seo = locale ? undefined : flagshipSeoByPath[tool.path],
+    seo = localizedFlagship(tool.path,locale)??flagshipSeoByPath[tool.path],
     t = seo ? { ...localized, title: seo.heading, description: seo.description } : localized,
     c = common[locale ?? "en"],
     prefix = locale ? `/${locale}` : "";
@@ -95,7 +96,7 @@ export function GrowthToolPage({
         </nav>
         <div className="mx-auto max-w-5xl">
           <p className="text-sm font-bold uppercase tracking-[.18em] text-[#315efb]">
-            {tool.group}
+            {locale?parent.label:tool.group}
           </p>
           <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
             {t.title}
@@ -106,7 +107,7 @@ export function GrowthToolPage({
           <div className="mt-8">
             <GrowthToolClient kind={tool.kind} locale={locale} />
           </div>
-          {seo ? <FlagshipSeoContent path={tool.path} /> : <section className="mt-12 grid gap-7 md:grid-cols-2">
+          {seo ? <FlagshipSeoContent path={tool.path} locale={locale} /> : <section className="mt-12 grid gap-7 md:grid-cols-2">
             <article>
               <h2 className="text-2xl font-bold">{c.about}</h2>
               <p className="mt-3 leading-7 text-slate-600">

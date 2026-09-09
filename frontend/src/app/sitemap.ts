@@ -8,6 +8,8 @@ import {siteUrl} from "@/lib/site";
 import {growthTools} from "@/lib/growth-tools";
 import {alternates,locales} from "@/lib/i18n";
 import {flagshipPaths} from "@/lib/flagship-seo";
+import {fullyLocalizedFlagshipPaths}from"@/lib/localized-routes";
+import{guides}from"@/lib/authority-content";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const paths = [
@@ -16,12 +18,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/network/ip-blacklist-check", "/network/subnet-calculator", "/network/cidr-calculator", "/network/ip-calculator",
     "/tools", "/tools/sms-character-counter",
     "/tools/gsm7-checker", "/tools/sms-segment-calculator", "/tools/unicode-sms-checker",
-    "/tools/e164-phone-formatter", "/tools/mcc-mnc-lookup", "/countries", "/calling-codes", "/mcc", "/carriers", "/errors", "/about", "/contact", "/privacy", "/terms", "/methodology", "/data-policy",
+    "/tools/e164-phone-formatter", "/tools/mcc-mnc-lookup", "/countries", "/calling-codes", "/mcc", "/carriers", "/errors", "/about", "/contact", "/privacy", "/terms", "/methodology", "/data-policy", "/guides", ...guides.map(g=>`/guides/${g.slug}`), "/data", "/data/telecom", "/data/calling-codes", "/data/mcc-mnc", "/data-sources", "/api",
   ];
   paths.push("/developer-tools",...developerTools.map(tool=>developerToolPath(tool.slug)),"/network/email-security",...networkTools.map(tool=>tool.path));
   paths.push(...growthTools.map(tool=>tool.path));
-  const base = [...new Set(paths)].map(path => ({ url: `${siteUrl}${path}`, changeFrequency: "weekly" as const, priority: path === "" ? 1 : 0.8, ...(growthTools.some(t=>t.path===path)&&!flagshipPaths.has(path)?{alternates:{languages:alternates(path)}}:{}) }));
-  const localized=growthTools.filter(tool=>!flagshipPaths.has(tool.path)).flatMap(tool=>locales.map(locale=>({url:`${siteUrl}/${locale.url}${tool.path}`,changeFrequency:"weekly" as const,priority:.7,alternates:{languages:alternates(tool.path)}})));
+  const base = [...new Set(paths)].map(path => ({ url: `${siteUrl}${path}`, changeFrequency: "weekly" as const, priority: path === "" ? 1 : 0.8, ...((growthTools.some(t=>t.path===path)&&!flagshipPaths.has(path))||fullyLocalizedFlagshipPaths.has(path)?{alternates:{languages:alternates(path)}}:{}) }));
+  const localizedPaths=new Set([...growthTools.filter(tool=>!flagshipPaths.has(tool.path)).map(tool=>tool.path),...fullyLocalizedFlagshipPaths]);
+  const localized=Array.from(localizedPaths).flatMap(path=>locales.map(locale=>({url:`${siteUrl}/${locale.url}${path}`,changeFrequency:"weekly" as const,priority:.7,alternates:{languages:alternates(path)}})));
   const dynamicEntries:MetadataRoute.Sitemap=[];
   try {
     const {data}=await apiGet<MobilePlanResponse>("/mobile-plans/country/GB?per_page=50");

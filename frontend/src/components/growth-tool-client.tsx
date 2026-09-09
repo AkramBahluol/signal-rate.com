@@ -23,6 +23,7 @@ import {
   strength,
 } from "@/lib/password";
 import { zonedWallTimeToUtc } from "@/lib/timezone";
+import { flagshipUiCopy } from "@/lib/flagship-ui-copy";
 import { publicApiUrl } from "@/lib/api";
 import { NetworkTool } from "@/components/network/network-tool";
 
@@ -330,7 +331,7 @@ function GrowthToolInner({
   if (kind === "download-reuse") return <NetworkTool mode="download-time" />;
   switch (kind) {
     case "password":
-      return <Password c={c} />;
+      return <Password c={c} locale={locale} />;
     case "percentage":
       return <Percentage c={c} locale={locale} />;
     case "age":
@@ -373,7 +374,8 @@ function Card({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-function Password({ c }: { c: Copy }) {
+function Password({ c,locale }: { c: Copy;locale?:LocaleUrl }) {
+  const t=flagshipUiCopy(locale??"en").password;
   const [length, setLength] = useState(20),
     [groups, setGroups] = useState(["upper", "lower", "numbers", "symbols"]),
     [exclude, setExclude] = useState(true),
@@ -389,7 +391,7 @@ function Password({ c }: { c: Copy }) {
   return (
     <Card>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Password length">
+        <Field label={t[0]}>
           <input
             className={input}
             type="number"
@@ -400,7 +402,7 @@ function Password({ c }: { c: Copy }) {
           />
         </Field>
         <fieldset>
-          <legend className="text-sm font-semibold">Character groups</legend>
+          <legend className="text-sm font-semibold">{t[1]}</legend>
           <div className="mt-2 flex flex-wrap gap-3">
             {["upper", "lower", "numbers", "symbols"].map((g) => (
               <label key={g}>
@@ -413,7 +415,7 @@ function Password({ c }: { c: Copy }) {
                     )
                   }
                 />{" "}
-                {g}
+                {t[{upper:2,lower:3,numbers:4,symbols:5}[g]!]}
               </label>
             ))}
           </div>
@@ -425,11 +427,11 @@ function Password({ c }: { c: Copy }) {
           checked={exclude}
           onChange={(e) => setExclude(e.target.checked)}
         />{" "}
-        Exclude ambiguous characters
+        {t[6]}
       </label>
       <div className="mt-5 flex gap-3">
         <button className="button-primary" onClick={generate}>
-          {value ? "Regenerate" : "Generate Password"}
+          {value ? t[8] : t[7]}
         </button>
         {value && (
           <button
@@ -447,9 +449,9 @@ function Password({ c }: { c: Copy }) {
         >
           {value}
           <p className="mt-2 text-xs text-slate-300">
-            {length} characters · {space.length} symbols ·{" "}
-            {entropyBits(length, space.length).toFixed(1)} bits ·{" "}
-            {strength(entropyBits(length, space.length))}
+            {length} {t[9]} · {space.length} {t[5]} ·{" "}
+            {t[10]}: {entropyBits(length, space.length).toFixed(1)} bits ·{" "}
+            {t[11]}: {strength(entropyBits(length, space.length))}
           </p>
         </div>
       )}
@@ -954,7 +956,8 @@ function DateCalc({ c, locale }: { c: Copy; locale?: string }) {
     </Card>
   );
 }
-function Timezone({ c, locale }: { c: Copy; locale?: string }) {
+function Timezone({ c, locale }: { c: Copy; locale?: LocaleUrl }) {
+  const t=flagshipUiCopy(locale??"en").timezone;
   const zones = [
     "Africa/Tripoli",
     "America/New_York",
@@ -987,7 +990,7 @@ function Timezone({ c, locale }: { c: Copy; locale?: string }) {
   return (
     <Card>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Date and time">
+        <Field label={t[0]}>
           <input
             className={input}
             type="datetime-local"
@@ -995,7 +998,7 @@ function Timezone({ c, locale }: { c: Copy; locale?: string }) {
             onChange={(e) => setDate(e.target.value)}
           />
         </Field>
-        <Field label="Source timezone">
+        <Field label={t[1]}>
           <select
             className={input}
             value={zone}
@@ -1015,7 +1018,7 @@ function Timezone({ c, locale }: { c: Copy; locale?: string }) {
       </div>
       <div className="mt-4 flex flex-wrap gap-3">
         <select
-          aria-label="Add destination timezone"
+          aria-label={t[2]}
           className={input}
           defaultValue=""
           onChange={(e) => {
@@ -1024,7 +1027,7 @@ function Timezone({ c, locale }: { c: Copy; locale?: string }) {
             e.target.value = "";
           }}
         >
-          <option value="">Add destination…</option>
+          <option value="">{t[2]}…</option>
           {zones
             .filter((z) => z !== zone && !dest.includes(z))
             .map((z) => (
@@ -1039,7 +1042,7 @@ function Timezone({ c, locale }: { c: Copy; locale?: string }) {
             setZone(first);
           }}
         >
-          Swap
+          {t[3]}
         </button>
         <button
           className="button-secondary"
@@ -1062,8 +1065,7 @@ function Timezone({ c, locale }: { c: Copy; locale?: string }) {
         ))}
       </div>
       <p className="mt-3 text-xs text-slate-500">
-        Uses browser IANA timezone data, including DST. The entered wall time is
-        interpreted by the browser; verify critical scheduling.
+        {t[4]}
       </p>
     </Card>
   );
@@ -1239,7 +1241,8 @@ function LocalPem({ kind, c }: { kind: GrowthKind; c: Copy }) {
     </Card>
   );
 }
-function Currency({ c, locale }: { c: Copy; locale?: string }) {
+function Currency({ c, locale }: { c: Copy; locale?: LocaleUrl }) {
+  const t=flagshipUiCopy(locale??"en").currency;
   const [amount, setAmount] = useState(100),
     [from, setFrom] = useState("USD"),
     [to, setTo] = useState("EUR"),
@@ -1256,13 +1259,13 @@ function Currency({ c, locale }: { c: Copy; locale?: string }) {
       });
       setResult(await r.json());
     } catch {
-      setResult({ message: "Exchange rates are temporarily unavailable." });
+      setResult({ message: t[8] });
     }
   }
   return (
     <Card>
       <div className="grid gap-4 sm:grid-cols-3">
-        <Field label="Amount">
+        <Field label={t[0]}>
           <input
             className={input}
             type="number"
@@ -1270,14 +1273,14 @@ function Currency({ c, locale }: { c: Copy; locale?: string }) {
             onChange={(e) => setAmount(+e.target.value)}
           />
         </Field>
-        <Field label="From">
+        <Field label={t[1]}>
           <input
             className={input}
             value={from}
             onChange={(e) => setFrom(e.target.value.toUpperCase())}
           />
         </Field>
-        <Field label="To">
+        <Field label={t[2]}>
           <input
             className={input}
             value={to}
@@ -1288,13 +1291,9 @@ function Currency({ c, locale }: { c: Copy; locale?: string }) {
       <button className="button-primary mt-4" onClick={run}>
         {c.calculate}
       </button>
-      {result && (
-        <pre className="result-card mt-5 overflow-auto" dir="ltr">
-          {JSON.stringify(result, null, 2)}
-        </pre>
-      )}
+      {result && ("data" in result&&result.data&&typeof result.data==="object"?<dl className="result-card mt-5 grid gap-3 sm:grid-cols-2">{[[t[3],(result.data as Record<string,unknown>).result],[t[4],(result.data as Record<string,unknown>).rate],[t[5],(result.data as Record<string,unknown>).updated_at],[t[6],(result.data as Record<string,unknown>).source_name]].map(([label,value])=><div key={String(label)}><dt className="text-xs font-bold text-slate-500">{String(label)}</dt><dd className="mt-1 font-semibold" dir="ltr">{String(value??"—")}</dd></div>)}</dl>:<p role="alert" className="mt-5 rounded-xl bg-rose-50 p-4 text-rose-800">{String(result.message??t[8])}</p>)}
       <p className="mt-3 text-xs text-slate-500">
-        ECB reference rates are not live trading rates.
+        {t[7]}
       </p>
     </Card>
   );

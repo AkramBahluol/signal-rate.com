@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { isLocale, stripLocalePrefix } from "@/lib/i18n";
 import { localizedGrowthPaths } from "@/lib/growth-tools";
+import { fullyLocalizedFlagshipPaths } from "@/lib/localized-flagships";
 
 const localizedShellPages = new Set(["/", "/tools", "/network", "/developer-tools", "/calculators", "/errors"]);
 
@@ -13,7 +14,7 @@ export function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-signalrate-locale", locale);
 
-  if (localizedGrowthPaths.has(basePath) || localizedShellPages.has(basePath)) {
+  if (localizedGrowthPaths.has(basePath) || fullyLocalizedFlagshipPaths.has(basePath) || localizedShellPages.has(basePath)) {
     return NextResponse.next({ request: { headers: requestHeaders } });
   }
 

@@ -4,6 +4,7 @@ import { flagshipMetadata, flagshipPaths, flagshipSeoPages } from "./flagship-se
 import { growthTools } from "./growth-tools";
 import { jsonLd } from "./json-ld";
 import { networkTools } from "./network-tools";
+import { fullyLocalizedFlagshipPaths } from "./localized-routes";
 
 const expectedPaths = [
   "/network/speed-test",
@@ -42,10 +43,11 @@ describe("flagship SEO foundation", () => {
     }
   });
 
-  it("uses a self-canonical without false localized alternates", () => {
+  it("uses a self-canonical and alternates only for fully translated flagships", () => {
     for (const path of expectedPaths) {
       const metadata = flagshipMetadata(path);
-      expect(metadata?.alternates).toEqual({ canonical: path });
+      expect(metadata?.alternates?.canonical).toBe(path);
+      expect(Boolean(metadata?.alternates?.languages)).toBe(fullyLocalizedFlagshipPaths.has(path));
     }
   });
 

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { alternates } from "./i18n";
+import { fullyLocalizedFlagshipPaths } from "./localized-routes";
 
 export type FlagshipSeoPage = {
   path: string;
@@ -255,7 +257,7 @@ export function flagshipMetadata(path: string): Metadata | undefined {
   return {
     title: page.title,
     description: page.description,
-    alternates: { canonical: page.path },
+    alternates: { canonical: page.path, ...(fullyLocalizedFlagshipPaths.has(path)?{languages:alternates(path)}:{}) },
     openGraph: { title: `${page.title} | SignalRate`, description: page.description, url: page.path, type: "website" },
   };
 }

@@ -1,0 +1,1 @@
+export const fullyLocalizedFlagshipPaths=new Set(["/network/speed-test","/network/what-is-my-ip","/developer-tools/password-generator","/developer-tools/json-formatter","/calculators/currency-converter","/tools/time-zone-converter"]);
