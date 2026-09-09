@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { Footer, Header } from "@/components/site-chrome";
 import { GrowthToolClient } from "@/components/growth-tool-client";
-import { common, localizedPath, type LocaleUrl } from "@/lib/i18n";
+import { FlagshipSeoContent } from "@/components/flagship-seo-content";
+import { flagshipSeoByPath } from "@/lib/flagship-seo";
+import { common, localizedPath, shellCopy, type LocaleUrl } from "@/lib/i18n";
+import { jsonLd } from "@/lib/json-ld";
 import {
   growthTools,
   localizedTool,
@@ -15,17 +18,35 @@ export function GrowthToolPage({
   tool: GrowthTool;
   locale?: LocaleUrl;
 }) {
-  const t = localizedTool(tool, locale),
+  const localized = localizedTool(tool, locale),
+    seo = locale ? undefined : flagshipSeoByPath[tool.path],
+    t = seo ? { ...localized, title: seo.heading, description: seo.description } : localized,
     c = common[locale ?? "en"],
     prefix = locale ? `/${locale}` : "";
+  const parent = tool.group === "Calculator"
+    ? { path: "/calculators", label: c.calculators }
+    : tool.path.startsWith("/developer-tools/")
+      ? { path: "/developer-tools", label: shellCopy[locale ?? "en"].developerTools }
+      : tool.group === "Utility"
+        ? { path: "/tools", label: c.tools }
+        : { path: "/network", label: shellCopy[locale ?? "en"].networkTools };
   const schema = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     name: t.title,
     url: `https://signal-rate.com${localizedPath(tool.path, locale)}`,
     applicationCategory: "UtilitiesApplication",
     operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  };
+  const breadcrumbs = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: c.home, item: `https://signal-rate.com${locale ? `/${locale}` : ""}` },
+      { "@type": "ListItem", position: 2, name: parent.label, item: `https://signal-rate.com${localizedPath(parent.path, locale)}` },
+      { "@type": "ListItem", position: 3, name: t.title, item: `https://signal-rate.com${localizedPath(tool.path, locale)}` },
+    ],
   };
   if (tool.kind === "hub")
     return (
@@ -66,15 +87,9 @@ export function GrowthToolPage({
         <nav aria-label="Breadcrumb" className="mb-7 text-sm text-slate-500">
           <Link href={locale ? `/${locale}` : "/"}>{c.home}</Link> /{" "}
           <Link
-            href={
-              tool.group === "Calculator"
-                ? `${prefix}/calculators`
-                : tool.group === "Utility"
-                  ? `${prefix}/tools`
-                  : `${prefix}/network`
-            }
+            href={`${prefix}${parent.path}`}
           >
-            {tool.group === "Calculator" ? c.calculators : c.tools}
+            {parent.label}
           </Link>{" "}
           / {t.title}
         </nav>
@@ -91,7 +106,7 @@ export function GrowthToolPage({
           <div className="mt-8">
             <GrowthToolClient kind={tool.kind} locale={locale} />
           </div>
-          <section className="mt-12 grid gap-7 md:grid-cols-2">
+          {seo ? <FlagshipSeoContent path={tool.path} /> : <section className="mt-12 grid gap-7 md:grid-cols-2">
             <article>
               <h2 className="text-2xl font-bold">{c.about}</h2>
               <p className="mt-3 leading-7 text-slate-600">
@@ -127,14 +142,15 @@ export function GrowthToolPage({
                 {c.privacy}
               </p>
             </article>
-          </section>
+          </section>}
         </div>
       </main>
       <Footer />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(schema) }}
       />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbs) }} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { GrowthToolPage } from "@/components/growth-tool-page";
+import { flagshipMetadata } from "@/lib/flagship-seo";
 import { alternates } from "@/lib/i18n";
 import { growthByPath, growthTools } from "@/lib/growth-tools";
 type Props = { params: Promise<{ growth: string }> };
@@ -11,6 +12,8 @@ export function generateStaticParams() {
 }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = growthByPath[`/network/${(await params).growth}`];
+  const flagship = t ? flagshipMetadata(t.path) : undefined;
+  if (flagship) return flagship;
   return t
     ? {
         title: t.title,
