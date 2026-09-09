@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type SpeedTest from "@cloudflare/speedtest";
 import type { MeasurementSummary, MeasurementType } from "@cloudflare/speedtest";
 import { speedTestMeasurements, toDisplayMetrics, type SpeedTestProfile } from "@/lib/speed-test";
+import { useLocaleCopy } from "@/components/use-locale";
 
 type Engine = InstanceType<typeof SpeedTest>;
 type Status = "idle" | "loading" | "running" | "finished" | "error";
@@ -19,6 +20,7 @@ function Metric({ label, value, unit }: { label: string; value?: number; unit: s
 }
 
 export function InternetSpeedTest() {
+  const {locale,copy}=useLocaleCopy();
   const engineRef = useRef<Engine | null>(null);
   const mountedRef = useRef(true);
   const [status, setStatus] = useState<Status>("idle");
@@ -84,12 +86,13 @@ export function InternetSpeedTest() {
   }
 
   const busy = status === "loading" || status === "running";
+  const localized={en:["Start Quick Test","Start Full Test","Testing…"],ja:["クイックテストを開始","フルテストを開始","テスト中…"],"pt-br":["Iniciar teste rápido","Iniciar teste completo","Testando…"],de:["Schnelltest starten","Vollständigen Test starten","Test läuft…"],es:["Iniciar prueba rápida","Iniciar prueba completa","Probando…"],hi:["त्वरित परीक्षण शुरू करें","पूर्ण परीक्षण शुरू करें","परीक्षण जारी…"],fr:["Démarrer le test rapide","Démarrer le test complet","Test en cours…"],ko:["빠른 테스트 시작","전체 테스트 시작","테스트 중…"],ar:["ابدأ الاختبار السريع","ابدأ الاختبار الكامل","جارٍ الاختبار…"],id:["Mulai tes cepat","Mulai tes lengkap","Menguji…"]}[locale];
   return <section className="mt-8 rounded-3xl border bg-slate-50 p-5 sm:p-8" aria-labelledby="speed-test-controls">
     <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
       <div><h2 id="speed-test-controls" className="text-2xl font-bold">Run a browser speed test</h2><p className="mt-2 max-w-2xl leading-7 text-slate-600">Choose Quick for a lighter estimate or Full for a broader sample. Close downloads, calls, and streaming for a more representative result.</p></div>
       <div className="flex shrink-0 flex-wrap gap-3">
-        <button type="button" disabled={busy} onClick={() => start("quick")} className="rounded-xl bg-[#315efb] px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50">{busy ? "Testing…" : "Start Quick Test"}</button>
-        <button type="button" disabled={busy} onClick={() => start("full")} className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-semibold disabled:cursor-not-allowed disabled:opacity-50">Start Full Test</button>
+        <button type="button" disabled={busy} onClick={() => start("quick")} className="rounded-xl bg-[#315efb] px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50">{busy ? localized[2] : localized[0]}</button>
+        <button type="button" disabled={busy} onClick={() => start("full")} className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-semibold disabled:cursor-not-allowed disabled:opacity-50">{localized[1]}</button>
       </div>
     </div>
     <div className="mt-6 flex items-center gap-3 rounded-xl bg-white px-4 py-3 text-sm" role="status" aria-live="polite"><span className={`h-2.5 w-2.5 rounded-full ${busy ? "animate-pulse bg-blue-500" : status === "finished" ? "bg-emerald-500" : status === "error" ? "bg-rose-500" : "bg-slate-300"}`}/><span className="font-semibold">{phase}</span></div>
@@ -100,6 +103,6 @@ export function InternetSpeedTest() {
       <Metric label="Ping / latency" value={metrics.latencyMs} unit="ms"/>
       <Metric label="Jitter" value={metrics.jitterMs} unit="ms"/>
     </div>
-    <p className="mt-5 text-sm leading-6 text-slate-500"><strong>Privacy and data use:</strong> Test traffic travels directly between this browser and Cloudflare&apos;s speed-test endpoints; it does not pass through the SignalRate backend. SignalRate does not save the inputs or results. The test consumes data, and a Full Test may use substantially more than a Quick Test.</p>
+    <p className="mt-5 text-sm leading-6 text-slate-500"><strong>{copy.privacy}:</strong> Test traffic travels directly between this browser and Cloudflare&apos;s speed-test endpoints; it does not pass through the SignalRate backend. SignalRate does not save the inputs or results. The test consumes data, and a Full Test may use substantially more than a Quick Test.</p>
   </section>;
 }
