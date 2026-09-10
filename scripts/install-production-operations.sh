@@ -14,6 +14,8 @@ chmod 0755 "$repository_root/scripts/notify-operations.sh" \
     "$repository_root/scripts/operations-health.sh" \
     "$repository_root/scripts/backup-offsite.sh" \
     "$repository_root/scripts/verify-offsite-backup.sh"
+chmod 0755 "$repository_root/scripts/install-production-observability.sh" \
+    "$repository_root/scripts/signalrate-observability.py"
 install -o root -g root -m 0644 "$repository_root/deploy/logrotate/signalrate" /etc/logrotate.d/signalrate
 install -o root -g root -m 0644 "$repository_root"/deploy/systemd/signalrate-*.service /etc/systemd/system/
 install -o root -g root -m 0644 "$repository_root"/deploy/systemd/signalrate-*.timer /etc/systemd/system/

@@ -24,8 +24,39 @@ export SIGNALRATE_RELEASE="$(git rev-parse --short=12 HEAD)"
 export SIGNALRATE_ENV_FILE="$environment_file"
 compose=(docker compose -f docker-compose.prod.yml --env-file "$environment_file")
 
+deployment_log="${SIGNALRATE_DEPLOYMENT_LOG:-/var/log/signalrate/deployments.json.log}"
+deployment_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+deployment_id="deploy_$(date -u +%Y%m%dT%H%M%SZ)_${SIGNALRATE_RELEASE}"
+containers_recreate_started_at=""
+healthy_at=""
+
+write_deployment_event() {
+    local event="$1" timestamp="$2" status="${3:-}" completed_at="${4:-}"
+    if [[ -d "$(dirname "$deployment_log")" && -w "$(dirname "$deployment_log")" ]]; then
+        printf '{"timestamp":"%s","deployment_id":"%s","event":"%s","commit":"%s","status":"%s","started_at":"%s","containers_recreate_started_at":"%s","healthy_at":"%s","completed_at":"%s"}\n' \
+            "$timestamp" "$deployment_id" "$event" "$SIGNALRATE_RELEASE" "$status" "$deployment_started_at" "$containers_recreate_started_at" "$healthy_at" "$completed_at" >> "$deployment_log"
+    else
+        echo "Deployment event log is not writable: $deployment_log" >&2
+    fi
+}
+
+finish_deployment() {
+    local exit_code=$? completed_at status
+    trap - EXIT
+    completed_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    status="failure"
+    [[ "$exit_code" == 0 ]] && status="success"
+    write_deployment_event completed "$completed_at" "$status" "$completed_at" || true
+    exit "$exit_code"
+}
+
+trap finish_deployment EXIT
+write_deployment_event started "$deployment_started_at"
+
 "${compose[@]}" config --quiet
 "${compose[@]}" build
+containers_recreate_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+write_deployment_event containers_recreate_started "$containers_recreate_started_at"
 "${compose[@]}" up -d postgres redis
 
 for service in postgres redis; do
@@ -55,6 +86,9 @@ for service in frontend backend nginx postgres redis; do
         sleep 2
     done
 done
+
+healthy_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+write_deployment_event healthy "$healthy_at"
 
 "${compose[@]}" ps
 curl --fail --silent --show-error --header 'Host: signal-rate.com' http://127.0.0.1:8080/ >/dev/null
